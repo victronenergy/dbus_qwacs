@@ -3,7 +3,6 @@
 BusItemAdaptor::BusItemAdaptor(QObject *parent)
 	: QDBusAbstractAdaptor(parent)
 {
-	setAutoRelaySignals(true);
 }
 
 QString BusItemAdaptor::text() const

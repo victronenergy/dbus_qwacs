@@ -31,6 +31,7 @@ public slots:
 	int SetValue(const QDBusVariant &value);
 
 signals:
+	void PropertiesChanged(const QVariantMap &changes);
 
 private:
 

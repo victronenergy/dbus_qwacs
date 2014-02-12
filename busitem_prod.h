@@ -13,20 +13,23 @@ public:
 	BusItemProd(const QVariant &value, QObject *parent = 0);
 	BusItemProd(const QString &value, QObject *parent = 0);
 
-	void setValue(const QVariant &value) { mValue = value; }
+	void setValue(const QVariant &value);
 	void setValid(const bool valid) { mValid = valid; }
-	void setText(const QString &text) { mText = text; }
+	void setText(const QString &text);
 
 public slots:
 	QDBusVariant getValue() {return QDBusVariant(mValue); }
 	bool getValid() { return mValid; }
 	QString getText() { return mText; }
 
+	void propertiesUpdated();
+
 signals:
 	void PropertiesChanged(const QVariantMap &changes);
 
 private:
 	BusItemAdaptor* mBusItem;
+	QVariantMap mChanges;
 
 	bool mValid;
 	QVariant mValue;

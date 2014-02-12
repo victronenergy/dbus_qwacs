@@ -116,58 +116,82 @@ void PVinverter::unregisterPhase(const Phases phase)
 
 void PVinverter::setVoltage(const Phases phase, const qreal value)
 {
+	QString text(QString::number(value,'f',0)+" V");
+
 	switch (phase)
 	{
 	case L1:
 		mBusItemMap[L1_Voltage]->setValue(value);
+		mBusItemMap[L1_Voltage]->setText(text);
+		mBusItemMap[L1_Voltage]->propertiesUpdated();
 		break;
 	case L2:
 		mBusItemMap[L2_Voltage]->setValue(value);
+		mBusItemMap[L2_Voltage]->setText(text);
+		mBusItemMap[L2_Voltage]->propertiesUpdated();
 		break;
 	case L3:
 		mBusItemMap[L3_Voltage]->setValue(value);
+		mBusItemMap[L3_Voltage]->setText(text);
+		mBusItemMap[L3_Voltage]->propertiesUpdated();
 		break;
 	default:
 		QLOG_ERROR() << "[PVinverter::setVoltage] Unknown phase: " << phase;
-		break;
+		return;
 	}
 }
 
 void PVinverter::setCurrent(const Phases phase, const qreal value)
 {
+	QString text(QString::number(value,'f',1)+" A");
+
 	switch (phase)
 	{
 	case L1:
 		mBusItemMap[L1_Current]->setValue(value);
+		mBusItemMap[L1_Current]->setText(text);
+		mBusItemMap[L1_Current]->propertiesUpdated();
 		break;
 	case L2:
 		mBusItemMap[L2_Current]->setValue(value);
+		mBusItemMap[L2_Current]->setText(text);
+		mBusItemMap[L2_Current]->propertiesUpdated();
 		break;
 	case L3:
 		mBusItemMap[L3_Current]->setValue(value);
+		mBusItemMap[L3_Current]->setText(text);
+		mBusItemMap[L3_Current]->propertiesUpdated();
 		break;
 	default:
 		QLOG_ERROR() << "[PVinverter::setCurrent] Unknown phase: " << phase;
-		break;
+		return;
 	}
 }
 
 void PVinverter::setPower(const Phases phase, const uint value)
 {
+	QString text(QString::number(value,'f',0)+" W");
+
 	switch (phase)
 	{
 	case L1:
 		mBusItemMap[L1_Power]->setValue(value);
+		mBusItemMap[L1_Power]->setText(text);
+		mBusItemMap[L1_Power]->propertiesUpdated();
 		break;
 	case L2:
 		mBusItemMap[L2_Power]->setValue(value);
+		mBusItemMap[L2_Power]->setText(text);
+		mBusItemMap[L2_Power]->propertiesUpdated();
 		break;
 	case L3:
 		mBusItemMap[L3_Power]->setValue(value);
+		mBusItemMap[L3_Power]->setText(text);
+		mBusItemMap[L3_Power]->propertiesUpdated();
 		break;
 	default:
 		QLOG_ERROR() << "[PVinverter::setPower] Unknown phase: " << phase;
-		break;
+		return;
 	}
 }
 

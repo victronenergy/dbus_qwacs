@@ -25,6 +25,9 @@ public:
 public slots:
 
 signals:
+	void voltageChanged(const QVariantMap &changes);
+	void currentChanged(const QVariantMap &changes);
+	void powerChanged(const QVariantMap &changes);
 
 private:
 	enum Items {
