@@ -29,7 +29,7 @@ Qwacs::Qwacs(QObject *parent) :
 									  const QString &, const QString &))
 			 );
 
-	mDBus.registerService("com.victronenergy.pv-inverter.qwacs");
+	mDBus.registerService("com.victronenergy.qwacs");
 	mDBus.registerObject("/Manager", &mManager);
 
 	connect (&mGateway, SIGNAL(gatewayFound(const QString &)), this, SLOT(gatewayFound(const QString &)));
