@@ -15,7 +15,7 @@ class SensorAdaptor : public QDBusAbstractAdaptor
 	Q_PROPERTY(QString version READ getVersion)
 	Q_PROPERTY(qreal voltage READ getVoltage)
 	Q_PROPERTY(qreal current READ getCurrent)
-	Q_PROPERTY(uint power READ getPower)
+	Q_PROPERTY(int power READ getPower)
 	Q_PROPERTY(uint energyForward READ getEnergyForward)
 	Q_PROPERTY(uint energyReverse READ getEnergyReverse)
 	Q_PROPERTY(uint phase READ getPhase)

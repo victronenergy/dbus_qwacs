@@ -3,7 +3,7 @@
 
 Gateway::Gateway(QObject *parent) :
 	QObject(parent),
-	mAdaptor(0)
+	mAdaptor()
 {
 	mConnected = false;
 	mState = WAIT_FOR_CONNECTION;
@@ -67,7 +67,7 @@ void Gateway::updateSensor(Sensor * const sens, const JsonObject &result)
 			electricity = result["electricity"].toMap();
 			sens->setVoltage(electricity["Vrms"].toDouble());
 			sens->setCurrent(electricity["Irms"].toDouble());
-			sens->setPower(electricity["power"].toUInt());
+			sens->setPower(electricity["power"].toInt());
 			sens->setEnergyForward(electricity["energyForward"].toUInt());
 			sens->setEnergyReverse(electricity["energyReverse"].toUInt());
 		}
