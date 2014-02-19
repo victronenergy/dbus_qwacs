@@ -11,9 +11,10 @@ class Settings : public QObject
 public:
 	Settings(QObject *parent = 0);
 
-	Positions getPosition(QString id);
-	Connections getConnection(QString id);
-	Phases getPhase(QString id);
+	Positions getPosition(const QString &id);
+	Connections getConnection(const QString &id);
+	Phases getPhase(const QString &id);
+	uint getNumberOfPhases(const Connections conn);
 
 signals:
 	void sensorAddedOnPos(const QString & id);
@@ -27,11 +28,13 @@ private slots:
 private:
 	void createBusItem(const Positions pos);
 	QString getObjectPath(const Positions pos);
-	Connections getConnection(Positions pos);
+	Connections getConnection(const Positions pos);
+	Phases getPhase(const Positions pos);
 
 	QMultiMap<BusItemCons *, QString> mBusitemIdMap;
 	QMap<BusItemCons *, Positions> mBusitemPositionMap;
 	QMap<QString, Positions> mIdPositionMap;
+	QMap<Positions, bool> mPositionsTakenMap;
 };
 
 #endif // SETTINGS_H

@@ -1,5 +1,6 @@
 #include "pvinverter.h"
 #include "defines.h"
+#include "version.h"
 #include "QsLog.h"
 
 PVinverter::PVinverter(const QString &service, QObject *parent) :
@@ -27,8 +28,23 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 	mBusItemMap.insert(L3_Power, new BusItemProd);
 	mBusItemMap.insert(L3_EnergyForward, new BusItemProd);
 	mBusItemMap.insert(L3_EnergyReverse, new BusItemProd);
+	//mBusItemMap.insert(Voltage, new BusItemProd);
+	mBusItemMap.insert(Current, new BusItemProd);
+	mBusItemMap.insert(Power, new BusItemProd);
+	mBusItemMap.insert(EnergyForward, new BusItemProd);
+	mBusItemMap.insert(EnergyReverse, new BusItemProd);
 	mBusItemMap.insert(NumberOfPhases, new BusItemProd);
 	mBusItemMap.insert(Position, new BusItemProd);
+	mBusItemMap.insert(Version, new BusItemProd);
+	mBusItemMap.insert(Name, new BusItemProd);
+
+	for (int i = 0; i < L3; i++) {
+		//mVoltage.append(0);
+		mCurrent.append(0);
+		mPower.append(0);
+		mEnergyForward.append(0);
+		mEnergyReverse.append(0);
+	}
 }
 
 void PVinverter::registerConnection(const Connections pos)
@@ -52,7 +68,19 @@ void PVinverter::registerConnection(const Connections pos)
 		QLOG_ERROR() << "[PVinverter::registerPosition] Unknown position: " << pos;
 		break;
 	}
+	mBusItemMap[Version]->setValue(cVERSION);
+	mBusItemMap[Version]->setText(cVERSION);
+	mBusItemMap[Name]->setValue(cNAME);
+	mBusItemMap[Name]->setText(cNAME);
+	mDBus.registerObject("/Management/Version", mBusItemMap[Version]);
+	mDBus.registerObject("/Management/Name", mBusItemMap[Name]);
 	mDBus.registerObject("/Position", mBusItemMap[Position]);
+	mDBus.registerObject("/NumberOfPhases", mBusItemMap[NumberOfPhases]);
+	//mDBus.registerObject("/AC/Voltage", mBusItemMap[Voltage]);
+	mDBus.registerObject("/AC/Current", mBusItemMap[Current]);
+	mDBus.registerObject("/AC/Power", mBusItemMap[Power]);
+	mDBus.registerObject("/AC/Energy/Forward", mBusItemMap[EnergyForward]);
+	mDBus.registerObject("/AC/Energy/Reverse", mBusItemMap[EnergyReverse]);
 }
 
 void PVinverter::unregisterConnection(const Connections conn)
@@ -60,11 +88,18 @@ void PVinverter::unregisterConnection(const Connections conn)
 	Q_UNUSED(conn);
 
 	mDBus.unregisterObject("/Position");
+	mDBus.unregisterObject("/NumberOfPhases");
+	mDBus.unregisterObject("/AC", QDBusConnection::UnregisterTree);
 }
 
 void PVinverter::registerPhase(const Phases phase)
 {
-	QLOG_INFO()  << "[PVinverter::registerPhase()] phase = " << phase;
+	if (phase == NoPhase) {
+		QLOG_ERROR() << "[PVinverter::registerPhase] Unknown phase: " << phase;
+		return;
+	} else
+		QLOG_INFO()  << "[PVinverter::registerPhase()] phase = " << phase;
+
 	switch (phase)
 	{
 	case L1:
@@ -89,14 +124,18 @@ void PVinverter::registerPhase(const Phases phase)
 		mDBus.registerObject("/AC/L3/Energy/Reverse", mBusItemMap[L3_EnergyReverse]);
 		break;
 	default:
-		QLOG_ERROR() << "[PVinverter::registerPhase] Unknown phase: " << phase;
-		break;
+		return;
 	}
 }
 
 void PVinverter::unregisterPhase(const Phases phase)
 {
-	QLOG_INFO()  << "[PVinverter::unregisterPhase()] phase = " << phase;
+	if (phase == NoPhase) {
+		QLOG_ERROR() << "[PVinverter::unregisterPhase] Unknown phase: " << phase;
+		return;
+	} else
+		QLOG_INFO()  << "[PVinverter::unregisterPhase()] phase = " << phase;
+
 	switch (phase)
 	{
 	case L1:
@@ -109,15 +148,23 @@ void PVinverter::unregisterPhase(const Phases phase)
 		mDBus.unregisterObject("/AC/L3", QDBusConnection::UnregisterTree);
 		break;
 	default:
-		QLOG_ERROR() << "[PVinverter::unregisterPhase] Unknown phase: " << phase;
-		break;
+		return;
 	}
+	const int index = phase-1;
+	mCurrent[index] = 0;
+	mPower[index] = 0;
+	mEnergyForward[index] = 0;
+	mEnergyReverse[index] = 0;
 }
 
 void PVinverter::setVoltage(const Phases phase, const qreal value)
 {
-	QString text(QString::number(value,'f',0)+" V");
+	if (phase == NoPhase) {
+		QLOG_ERROR() << "[PVinverter::setVoltage] Unknown phase: " << phase;
+		return;
+	}
 
+	QString text(QString::number(value,'f',0)+" V");
 	switch (phase)
 	{
 	case L1:
@@ -136,15 +183,19 @@ void PVinverter::setVoltage(const Phases phase, const qreal value)
 		mBusItemMap[L3_Voltage]->propertiesUpdated();
 		break;
 	default:
-		QLOG_ERROR() << "[PVinverter::setVoltage] Unknown phase: " << phase;
 		return;
 	}
 }
 
 void PVinverter::setCurrent(const Phases phase, const qreal value)
 {
-	QString text(QString::number(value,'f',1)+" A");
+	if (phase == NoPhase) {
+		QLOG_ERROR() << "[PVinverter::setCurrent] Unknown phase: " << phase;
+		return;
+	}
 
+	QString text(QString::number(value,'f',1)+" A");
+	mCurrent[phase-1] = value;
 	switch (phase)
 	{
 	case L1:
@@ -163,15 +214,27 @@ void PVinverter::setCurrent(const Phases phase, const qreal value)
 		mBusItemMap[L3_Current]->propertiesUpdated();
 		break;
 	default:
-		QLOG_ERROR() << "[PVinverter::setCurrent] Unknown phase: " << phase;
 		return;
 	}
+	qreal sum = 0;
+	const int listSize = mCurrent.size();
+	for (int i = 0; i < listSize; ++i)
+		sum += mCurrent.at(i);
+	mBusItemMap[Current]->setValue(sum);
+	text = QString::number(sum,'f',1)+" A";
+	mBusItemMap[Current]->setText(text);
+	mBusItemMap[Current]->propertiesUpdated();
 }
 
-void PVinverter::setPower(const Phases phase, const uint value)
+void PVinverter::setPower(const Phases phase, const int value)
 {
-	QString text(QString::number(value,'f',0)+" W");
+	if (phase == NoPhase) {
+		QLOG_ERROR() << "[PVinverter::setPower] Unknown phase: " << phase;
+		return;
+	}
 
+	QString text(QString::number(value,'f',0)+" W");
+	mPower[phase-1] = value;
 	switch (phase)
 	{
 	case L1:
@@ -190,45 +253,97 @@ void PVinverter::setPower(const Phases phase, const uint value)
 		mBusItemMap[L3_Power]->propertiesUpdated();
 		break;
 	default:
-		QLOG_ERROR() << "[PVinverter::setPower] Unknown phase: " << phase;
 		return;
 	}
+	int sum = 0;
+	const int listSize = mPower.size();
+	for (int i = 0; i < listSize; ++i)
+		sum += mPower.at(i);
+	mBusItemMap[Power]->setValue(sum);
+	text = QString::number(sum,'f',0)+" W";
+	mBusItemMap[Power]->setText(text);
+	mBusItemMap[Power]->propertiesUpdated();
 }
 
 void PVinverter::setEnergyForward(const Phases phase, const uint value)
 {
+	if (phase == NoPhase) {
+		QLOG_ERROR() << "[PVinverter::setEnergyForward] Unknown phase: " << phase;
+		return;
+	}
+
+	QString text(QString::number(value,'f',0)+" Wh");
+	mEnergyForward[phase-1] = value;
 	switch (phase)
 	{
 	case L1:
 		mBusItemMap[L1_EnergyForward]->setValue(value);
+		mBusItemMap[L1_EnergyForward]->setText(text);
+		mBusItemMap[L1_EnergyForward]->propertiesUpdated();
 		break;
 	case L2:
 		mBusItemMap[L2_EnergyForward]->setValue(value);
+		mBusItemMap[L2_EnergyForward]->setText(text);
+		mBusItemMap[L2_EnergyForward]->propertiesUpdated();
 		break;
 	case L3:
 		mBusItemMap[L3_EnergyForward]->setValue(value);
+		mBusItemMap[L3_EnergyForward]->setText(text);
+		mBusItemMap[L3_EnergyForward]->propertiesUpdated();
 		break;
 	default:
-		QLOG_ERROR() << "[PVinverter::setEnergyForward] Unknown phase: " << phase;
-		break;
+		return;
 	}
+	uint sum = 0;
+	const int listSize = mEnergyForward.size();
+	for (int i = 0; i < listSize; ++i)
+		sum += mEnergyForward.at(i);
+	mBusItemMap[EnergyForward]->setValue(sum);
+	text = QString::number(sum,'f',0)+" Wh";
+	mBusItemMap[EnergyForward]->setText(text);
+	mBusItemMap[EnergyForward]->propertiesUpdated();
 }
 
 void PVinverter::setEnergyReverse(const Phases phase, const uint value)
 {
+	if (phase == NoPhase) {
+		QLOG_ERROR() << "[PVinverter::setEnergyForward] Unknown phase: " << phase;
+		return;
+	}
+
+	QString text(QString::number(value,'f',0)+" Wh");
+	mEnergyReverse[phase-1] = value;
 	switch (phase)
 	{
 	case L1:
 		mBusItemMap[L1_EnergyReverse]->setValue(value);
+		mBusItemMap[L1_EnergyReverse]->setText(text);
+		mBusItemMap[L1_EnergyReverse]->propertiesUpdated();
 		break;
 	case L2:
 		mBusItemMap[L2_EnergyReverse]->setValue(value);
+		mBusItemMap[L2_EnergyReverse]->setText(text);
+		mBusItemMap[L2_EnergyReverse]->propertiesUpdated();
 		break;
 	case L3:
 		mBusItemMap[L3_EnergyReverse]->setValue(value);
+		mBusItemMap[L3_EnergyReverse]->setText(text);
+		mBusItemMap[L3_EnergyReverse]->propertiesUpdated();
 		break;
 	default:
-		QLOG_ERROR() << "[PVinverter::setEnergyReverse] Unknown phase: " << phase;
-		break;
+		return;
 	}
+	uint sum = 0;
+	const int listSize = mEnergyReverse.size();
+	for (int i = 0; i < listSize; ++i)
+		sum += mEnergyReverse.at(i);
+	mBusItemMap[EnergyReverse]->setValue(sum);
+	text = QString::number(sum,'f',0)+" Wh";
+	mBusItemMap[EnergyReverse]->setText(text);
+	mBusItemMap[EnergyReverse]->propertiesUpdated();
+}
+void PVinverter::setNumberOfPhases(const uint value)
+{
+	mBusItemMap[NumberOfPhases]->setValue(value);
+	mBusItemMap[NumberOfPhases]->propertiesUpdated();
 }
