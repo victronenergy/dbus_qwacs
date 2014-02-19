@@ -22,8 +22,6 @@ public:
 	void setPower(int value) { mPower = value; }
 	void setEnergyForward(uint value) { mEnergyForward = value; }
 	void setEnergyReverse(uint value) { mEnergyReverse = value; }
-	//void setPosition(Positions pos) { mPosition = pos; }
-	void setPhase(Phases phase) { mPhase = phase; }
 
 	inline bool operator==(const QString &id) {
 		return mID == id;
@@ -40,7 +38,6 @@ public slots:
 	int getPower() const { return mPower; }
 	uint getEnergyForward() const { return mEnergyForward; }
 	uint  getEnergyReverse() const { return mEnergyReverse; }
-	uint  getPhase() const { return mPhase; }
 
 	void sensorUpdated() { emit propertiesChanged(); }
 
@@ -60,8 +57,6 @@ private:
 	int mPower; /* W */
 	uint mEnergyForward; /* Wh */
 	uint mEnergyReverse; /* Wh */
-	//QString mPosition;
-	Phases mPhase;
 };
 
 #endif // SENSOR_H
