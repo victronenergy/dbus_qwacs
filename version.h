@@ -4,7 +4,7 @@
 #define VERSION "v0.01"
 const QString cVERSION = QString(VERSION);
 
-#define NAME "VE.QWASC"
+#define NAME "dbus_qwacs"
 const QString cNAME = QString(NAME);
 
 #endif // VERSION_H
