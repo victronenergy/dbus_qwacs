@@ -28,7 +28,6 @@ private slots:
 private:
 	QStringList sensorList;
 	ManagerAdaptor* mAdaptor;
-	BusItemProd mVersionBusItem;
 };
 
 #endif // MANAGER_H

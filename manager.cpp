@@ -4,12 +4,10 @@
 
 Manager::Manager(QObject *parent) :
 	QObject(parent),
-	mAdaptor(0),
-	mVersionBusItem(cVERSION, 0)
+	mAdaptor()
 {
 	mAdaptor = new ManagerAdaptor(this);
 	connect (this, SIGNAL(sensorAdded(const QString &)), this, SLOT(addSensor(const QString &)));
-	DBUS_CONNECTION.registerObject("/Management/Version", &mVersionBusItem);
 }
 
 QStringList Manager::getSensors()
