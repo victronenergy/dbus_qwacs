@@ -46,7 +46,8 @@ SOURCES += main.cpp \
 	busitem_prod.cpp \
 	busitem_cons.cpp \
 	pvinverter.cpp \
-	settings.cpp
+	settings.cpp \
+    sensorset.cpp
 
 HEADERS += \
 	httprequest.h \
@@ -66,4 +67,5 @@ HEADERS += \
 	defines.h \
 	pvinverter.h \
 	settings.h \
-	types.h
+	types.h \
+    sensorset.h
