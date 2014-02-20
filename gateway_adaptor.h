@@ -24,8 +24,8 @@ public:
 	QString getCommonName() const { return mCommonName; }
 	QString getFirmwareVersion() const { return mFirmwareVersion; }
 	QString getArchFlavVers() const { return mArchFlavVers; }
-	QString getSerialNr() const { return mCommonName; }
-	QString getPartNr() const { return mCommonName; }
+	QString getSerialNr() const { return mSerialNr; }
+	QString getPartNr() const { return mPartNr; }
 	uint getUpdays() const { return mUpdays; }
 	uint getUphours() const { return mUphours; }
 
