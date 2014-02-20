@@ -5,9 +5,13 @@ Gateway::Gateway(QObject *parent) :
 	QObject(parent),
 	mAdaptor()
 {
+	mUpdays = 0;
+	mUphours = 0;
 	mConnected = false;
+	mGotGatewayInfo = false;
 	mState = WAIT_FOR_CONNECTION;
 	mAdaptor = new GatewayAdaptor(this);
+	mAdaptor->connect(this, SIGNAL(PropertiesChanged(const QVariantMap &)), SIGNAL(PropertiesChanged(const QVariantMap &)));
 	connect (&mHTTPConnection, SIGNAL(result(QString)), this, SLOT(httpResult(QString)));
 	connect(&mSensTimer, SIGNAL(timeout()), this, SLOT(sensTimer()));
 }
@@ -74,6 +78,32 @@ void Gateway::updateSensor(Sensor * const sens, const JsonObject &result)
 	}
 }
 
+void Gateway::setUpdays(const uint value)
+{
+	if (mUpdays == value)
+		return;
+
+	mChanges.insert("updays", value);
+	mUpdays = value;
+}
+
+void Gateway::setUphours(const uint value)
+{
+	if (mUphours == value)
+		return;
+
+	mChanges.insert("uphours", value);
+	mUphours = value;
+}
+
+void Gateway::propertiesUpdated()
+{
+	if (!mChanges.empty()) {
+		emit PropertiesChanged(mChanges);
+		mChanges.clear();
+	}
+}
+
 void Gateway::httpResult(QString str)
 {
 	QLOG_TRACE() << "[Gateway::httpResult] " << endl << str;
@@ -90,14 +120,18 @@ void Gateway::httpResult(QString str)
 		bool ok;
 		JsonObject result = QtJson::parse(str, ok).toMap();
 		if (ok) {
-			mAdaptor->setCommonName(result["commonName"].toString());
-			mAdaptor->setFirmwareVersion(result["firmwareVersion"].toString());
-			mAdaptor->setArchFlavVers(result["archFlavVers"].toString());
-			mAdaptor->setSerialNr(result["serialNr"].toString());
-			mAdaptor->setPartNr(result["partNr"].toString());
-			mAdaptor->setUpdays(result["updays"].toUInt());
-			mAdaptor->setUphours(result["uphours"].toUInt());
-			emit gatewayFound(mHostname);
+			setCommonName(result["commonName"].toString());
+			setFirmwareVersion(result["firmwareVersion"].toString());
+			setArchFlavVers(result["archFlavVers"].toString());
+			setSerialNr(result["serialNr"].toString());
+			setPartNr(result["partNr"].toString());
+			setUpdays(result["updays"].toUInt());
+			setUphours(result["uphours"].toUInt());
+			propertiesUpdated();
+			if (!mGotGatewayInfo) {
+				emit gatewayFound(mHostname);
+				mGotGatewayInfo = true;
+			}
 			getSensorList();
 		}
 		else {
@@ -150,6 +184,7 @@ void Gateway::httpResult(QString str)
 void Gateway::sensTimer()
 {
 	if (mState == IDLE) {
-		getSensorList();
+		//getSensorList();
+		getVersion();
 	}
 }
