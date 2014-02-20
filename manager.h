@@ -14,6 +14,7 @@ public:
 
 	bool getGatewayConnected() { return mAdaptor->getGatewayConnected(); }
 	void setGatewayConnected(bool connected) { mAdaptor->setGatewayConnected(connected); }
+	void setHostname(const QString & hostname) { mAdaptor->setHostname(hostname); }
 
 signals:
 	void gatewayFound(const QString &hostname);

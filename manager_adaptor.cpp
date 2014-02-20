@@ -3,6 +3,7 @@
 ManagerAdaptor::ManagerAdaptor(QObject *parent) :
 	QDBusAbstractAdaptor(parent)
 {
+	mGatewayConnected = false;
 	setAutoRelaySignals(true);
 }
 

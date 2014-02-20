@@ -67,6 +67,7 @@ void Qwacs::initLogger(QsLogging::Level logLevel)
 void Qwacs::gatewayFound(const QString &hostname)
 {
 	QLOG_INFO()  << "[Qwacs::gatewayFound()] hostname = " << hostname;
+	mManager.setHostname(hostname);
 	mDBus.registerObject("/Gateway", &mGateway);
 }
 
