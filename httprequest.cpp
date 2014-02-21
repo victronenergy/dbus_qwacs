@@ -25,4 +25,5 @@ void httpRequest::finishedSlot(QNetworkReply* reply)
 	else {
 		QLOG_ERROR() << "httpRequest::finishedSlot: " << statusCodeV.toString();
 	}
+	reply->deleteLater();
 }
