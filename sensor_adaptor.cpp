@@ -74,10 +74,3 @@ uint SensorAdaptor::getEnergyReverse()
 	QMetaObject::invokeMethod(parent(), "getEnergyReverse", Q_RETURN_ARG(uint, value));
 	return value;
 }
-
-uint SensorAdaptor::getPhase()
-{
-	uint value;
-	QMetaObject::invokeMethod(parent(), "getPhase", Q_RETURN_ARG(uint, value));
-	return value;
-}

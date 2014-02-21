@@ -18,7 +18,6 @@ class SensorAdaptor : public QDBusAbstractAdaptor
 	Q_PROPERTY(int power READ getPower)
 	Q_PROPERTY(uint energyForward READ getEnergyForward)
 	Q_PROPERTY(uint energyReverse READ getEnergyReverse)
-	Q_PROPERTY(uint phase READ getPhase)
 
 public:
 	SensorAdaptor(QObject *parent = 0);
@@ -33,7 +32,6 @@ public:
 	int getPower();
 	uint getEnergyForward();
 	uint getEnergyReverse();
-	uint getPhase();
 
 public slots:
 
