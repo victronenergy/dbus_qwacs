@@ -29,13 +29,10 @@ public:
 	uint getUpdays();
 	uint getUphours();
 
-public slots:
-	void GetUplink();
-	void GetUptink();
-	void Blink();
-	void GetDownLink();
+public slots: // DBus methods
 	void BlinkSensor(const QString & id, const int seconds);
 	void RegistrationMode(bool on);
+	void GetUplink();
 	void SetUplink(bool enable);
 
 signals: // DBus Signals

@@ -69,24 +69,6 @@ void GatewayAdaptor::GetUplink()
 	QMetaObject::invokeMethod(parent(), "getUplink");
 }
 
-void GatewayAdaptor::GetUptink()
-{
-	QLOG_INFO() << "[GatewayAdaptor] Blink()";
-	QMetaObject::invokeMethod(parent(), "getUplink");
-}
-
-void GatewayAdaptor::GetDownLink()
-{
-	QLOG_INFO() << "[GatewayAdaptor] Blink()";
-	QMetaObject::invokeMethod(parent(), "getUplink");
-}
-
-void GatewayAdaptor::Blink()
-{
-	QLOG_INFO() << "[GatewayAdaptor] Blink()";
-	QMetaObject::invokeMethod(parent(), "getUplink");
-}
-
 void GatewayAdaptor::RegistrationMode(bool on)
 {
 	QMetaObject::invokeMethod(parent(), "registrationMode", Q_ARG(bool, on));
