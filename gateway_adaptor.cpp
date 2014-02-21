@@ -1,9 +1,10 @@
 #include "gateway.h"
+#include "QsLog.h"
 
 GatewayAdaptor::GatewayAdaptor(QObject *parent)
 	: QDBusAbstractAdaptor(parent)
 {
-	//setAutoRelaySignals(true);
+	setAutoRelaySignals(true);
 }
 
 QString GatewayAdaptor::getCommonName()
@@ -53,4 +54,45 @@ uint GatewayAdaptor::getUphours()
 	uint value;
 	QMetaObject::invokeMethod(parent(), "getUphours", Q_RETURN_ARG(uint, value));
 	return value;
+}
+
+void GatewayAdaptor::BlinkSensor(const QString & id , const int seconds)
+{
+	QLOG_INFO() << "[GatewayAdaptor] blinkSensor() id = " << id;//d << " time : " << seconds;
+	QMetaObject::invokeMethod(parent(), "blinkSensor", Q_ARG(QString, id), Q_ARG(int, seconds));
+	return;
+}
+
+void GatewayAdaptor::GetUplink()
+{
+	QLOG_INFO() << "[GatewayAdaptor] Blink()";
+	QMetaObject::invokeMethod(parent(), "getUplink");
+}
+
+void GatewayAdaptor::GetUptink()
+{
+	QLOG_INFO() << "[GatewayAdaptor] Blink()";
+	QMetaObject::invokeMethod(parent(), "getUplink");
+}
+
+void GatewayAdaptor::GetDownLink()
+{
+	QLOG_INFO() << "[GatewayAdaptor] Blink()";
+	QMetaObject::invokeMethod(parent(), "getUplink");
+}
+
+void GatewayAdaptor::Blink()
+{
+	QLOG_INFO() << "[GatewayAdaptor] Blink()";
+	QMetaObject::invokeMethod(parent(), "getUplink");
+}
+
+void GatewayAdaptor::RegistrationMode(bool on)
+{
+	QMetaObject::invokeMethod(parent(), "registrationMode", Q_ARG(bool, on));
+}
+
+void GatewayAdaptor::SetUplink(bool on)
+{
+	QMetaObject::invokeMethod(parent(), "setUplink", Q_ARG(bool, on));
 }

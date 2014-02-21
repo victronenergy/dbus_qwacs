@@ -29,11 +29,18 @@ public:
 	uint getUpdays();
 	uint getUphours();
 
-signals:
-	//void gateway(const QString &name, const QString &version);
-	void PropertiesChanged(const QVariantMap &changes);
-
 public slots:
+	void GetUplink();
+	void GetUptink();
+	void Blink();
+	void GetDownLink();
+	void BlinkSensor(const QString & id, const int seconds);
+	void RegistrationMode(bool on);
+	void SetUplink(bool enable);
+
+signals: // DBus Signals
+	void PropertiesChanged(const QVariantMap &changes);
+	void UplinkStatus(const QString & status);
 
 private:
 

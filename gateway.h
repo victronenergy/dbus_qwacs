@@ -22,7 +22,7 @@ public:
 	QString getHostname() { return mHostname; }
 	void setHostname(QString hostname) { mHostname = hostname; }
 	void getSensorList();
-	void getSensor(QString id);
+	void getSensor(const QString &id);
 	void getVersion();
 
 public slots:
@@ -36,6 +36,11 @@ public slots:
 	uint getUpdays() const { return mUpdays; }
 	uint getUphours() const { return mUphours; }
 
+	void blinkSensor(const QString & id, const int seconds);
+	void registrationMode(const bool on);
+	void getUplink();
+	void setUplink(const bool on);
+
 private slots:
 	void httpResult(QString str);
 	void sensTimer();
@@ -47,6 +52,7 @@ signals:
 	void sensorFound(const QString &id);
 	void sensorUpdated(Sensor * const sens);
 	void PropertiesChanged(const QVariantMap &changes);
+	void UplinkStatus(const QString & status);
 
 private:
 	enum State {
@@ -55,7 +61,9 @@ private:
 		GET_VERSION,
 		GET_CHECK,
 		GET_SENSORLIST,
-		GET_SENSORDATA
+		GET_SENSORDATA,
+		BLINK_SENSOR,
+		GET_UPLINK
 	};
 
 	Sensor * addSensor(const QString &id, const JsonObject &result);
@@ -64,6 +72,7 @@ private:
 	bool mConnected;
 	bool mGotGatewayInfo;
 	QString mHostname;
+	QString mUplinkStatus;
 	State mState;
 	GatewayAdaptor* mAdaptor;
 	httpRequest mHTTPConnection;

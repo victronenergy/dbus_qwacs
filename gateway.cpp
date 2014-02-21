@@ -37,11 +37,47 @@ void Gateway::getSensorList()
 	}
 }
 
-void Gateway::getSensor(QString id)
+void Gateway::getSensor(const QString & id)
 {
 	if (mConnected) {
 		mState = GET_SENSORDATA;
 		mHTTPConnection.getURL("http://"+mHostname+"/API/devices/dect/"+id+"/view");
+	}
+}
+
+void Gateway::blinkSensor(const QString & id, const int sec)
+{
+	QLOG_INFO() << "[Gateway] blinkSensor() id = " << id << " time : " << sec;
+	if (mConnected) {
+		//mState = BLINK_SENSOR;
+		mHTTPConnection.getURL("http://"+mHostname+"/API/devices/dect/"+id+"/blink/"+QString::number(sec));
+	}
+}
+
+void Gateway::registrationMode(const bool on)
+{
+	QLOG_INFO() << "[Gateway] registrationMode() on = " << on;
+	if (mConnected) {
+		//mState = BLINK_SENSOR;
+		mHTTPConnection.getURL("http://"+mHostname+"/API/devices/dect/regmode/"+QString(on ? "1" : "0"));
+	}
+}
+
+void Gateway::getUplink()
+{
+	QLOG_INFO() << "[Gateway] getUplink()";
+	if (mConnected) {
+		mState = GET_UPLINK;
+		mHTTPConnection.getURL("http://"+mHostname+"/API/net/uplink");
+	}
+}
+
+void Gateway::setUplink(const bool on)
+{
+	QLOG_INFO() << "[Gateway] setUplink() on = " << on;
+	if (mConnected) {
+		//mState = BLINK_SENSOR;
+		mHTTPConnection.getURL("http://"+mHostname+"/API/net/uplink/"+QString(on ? "1" : "0"));
 	}
 }
 
@@ -111,7 +147,7 @@ void Gateway::httpResult(QString str)
 
 	switch (mState) {
 	case IDLE:
-		QLOG_TRACE() << "[Gateway] State idle no http result expected. Ingoring";
+		QLOG_INFO() << "[Gateway] State idle no http result expected. Ingoring";
 		break;
 	case WAIT_FOR_CONNECTION:
 		break;
@@ -131,6 +167,7 @@ void Gateway::httpResult(QString str)
 			if (!mGotGatewayInfo) {
 				emit gatewayFound(mHostname);
 				mGotGatewayInfo = true;
+				mSensTimer.start(2490);
 			}
 			getSensorList();
 		}
@@ -154,7 +191,6 @@ void Gateway::httpResult(QString str)
 					updateSensor(mSensorMap[id], result);
 				emit sensorUpdated(mSensorMap[id]);
 			}
-			mSensTimer.start(2500);
 		}
 		else
 			QLOG_ERROR() << "QtJson: Cannot parse string to List: " << str;
@@ -172,6 +208,18 @@ void Gateway::httpResult(QString str)
 		}
 		else
 			QLOG_ERROR() << "QtJson: Cannot parse string to Map: " << str;
+		mState = IDLE;
+		break;
+	}
+	case GET_UPLINK:
+	{
+		QLOG_INFO() << "[Gateway::httpResult] " << endl << str;
+		bool ok;
+		JsonObject result = QtJson::parse(str, ok).toMap();
+		if (ok) {
+			mUplinkStatus = result["uplink"].toString();
+			emit UplinkStatus(mUplinkStatus);
+		}
 		mState = IDLE;
 		break;
 	}
