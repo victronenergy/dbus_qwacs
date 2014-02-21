@@ -16,7 +16,7 @@ Qwacs::Qwacs(QObject *parent) :
 	mAddSetting("com.victronenergy.settings", "/Settings", QDBusConnection::sessionBus(), parent)
 {
 	mDBusInstance = 0;
-	QVariant reply; // = mLogLevel.getValue();
+	QVariant reply = mLogLevel.getValue();
 	initLogger(reply.isValid() ? (QsLogging::Level)reply.toInt() : QsLogging::TraceLevel);
 
 	mSDDPClient.start();
