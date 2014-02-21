@@ -3,13 +3,26 @@
 ManagerAdaptor::ManagerAdaptor(QObject *parent) :
 	QDBusAbstractAdaptor(parent)
 {
-	mGatewayConnected = false;
 	setAutoRelaySignals(true);
 }
 
-QStringList ManagerAdaptor::GetSensors()
+bool ManagerAdaptor::getGatewayConnected()
 {
-	QStringList sensors;
-	QMetaObject::invokeMethod(parent(), "getSensors", Q_RETURN_ARG(QStringList, sensors));
-	return sensors;
+	bool value;
+	QMetaObject::invokeMethod(parent(), "getSensors", Q_RETURN_ARG(bool, value));
+	return value;
+}
+
+QString ManagerAdaptor::getHostname()
+{
+	QString value;
+	QMetaObject::invokeMethod(parent(), "getSensors", Q_RETURN_ARG(QString, value));
+	return value;
+}
+
+QStringList ManagerAdaptor::getSensors()
+{
+	QStringList value;
+	QMetaObject::invokeMethod(parent(), "getSensors", Q_RETURN_ARG(QStringList, value));
+	return value;
 }

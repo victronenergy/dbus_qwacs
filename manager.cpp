@@ -4,8 +4,9 @@
 
 Manager::Manager(QObject *parent) :
 	QObject(parent),
-	mAdaptor()
+	mAdaptor(0)
 {
+	mGatewayConnected = false;
 	mAdaptor = new ManagerAdaptor(this);
 	connect (this, SIGNAL(sensorAdded(const QString &)), this, SLOT(addSensor(const QString &)));
 }

@@ -12,9 +12,9 @@ class Manager : public QObject
 public:
 	Manager(QObject * parent = 0);
 
-	bool getGatewayConnected() { return mAdaptor->getGatewayConnected(); }
-	void setGatewayConnected(bool connected) { mAdaptor->setGatewayConnected(connected); }
-	void setHostname(const QString & hostname) { mAdaptor->setHostname(hostname); }
+	bool getGatewayConnected() { return mGatewayConnected; }
+	void setGatewayConnected(bool connected) { mGatewayConnected = connected; }
+	void setHostname(const QString & hostname) { mHostname = hostname; }
 
 signals:
 	void gatewayFound(const QString &hostname);
@@ -27,6 +27,8 @@ private slots:
 	void addSensor(const QString &id);
 
 private:
+	QString mHostname;
+	bool mGatewayConnected;
 	QStringList sensorList;
 	ManagerAdaptor* mAdaptor;
 };
