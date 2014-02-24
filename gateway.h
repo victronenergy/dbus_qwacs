@@ -7,8 +7,8 @@
 #include "httprequest.h"
 #include "json/json.h"
 
-using QtJson::JsonObject;
-using QtJson::JsonArray;
+//using QtJson::JsonObject;
+//using QtJson::JsonArray;
 
 class Gateway : public QObject
 {
@@ -66,8 +66,10 @@ private:
 		GET_UPLINK
 	};
 
-	Sensor * addSensor(const QString &id, const JsonObject &result);
-	void updateSensor(Sensor * const sens, const JsonObject &result);
+	//Sensor * addSensor(const QString &id, const JsonObject &result);
+	//void updateSensor(Sensor * const sens, const JsonObject &result);
+	Sensor * addSensor(const QString &id, const QVariantMap &result);
+	void updateSensor(Sensor * const sens, const QVariantMap &result);
 
 	bool mConnected;
 	bool mGotGatewayInfo;

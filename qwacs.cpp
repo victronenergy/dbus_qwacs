@@ -13,7 +13,8 @@ Qwacs::Qwacs(QObject *parent) :
 	mSettings(this),
 	mManager(this),
 	mGateway(this),
-	mAddSetting("com.victronenergy.settings", "/Settings", QDBusConnection::sessionBus(), parent)
+	mAddSetting("com.victronenergy.settings", "/Settings", QDBusConnection::sessionBus(), parent),
+	json(JSON::instance())
 {
 	mDBusInstance = 0;
 	QVariant reply = mLogLevel.getValue();

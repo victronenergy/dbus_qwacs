@@ -20,6 +20,7 @@ QT       += core
 QT       -= gui
 QT       += network
 QT       += dbus
+QT       += script
 
 TARGET    = dbus_qwacs
 CONFIG   += console
@@ -47,7 +48,7 @@ SOURCES += main.cpp \
 	busitem_cons.cpp \
 	pvinverter.cpp \
 	settings.cpp \
-    sensorset.cpp
+	sensorset.cpp \
 
 HEADERS += \
 	httprequest.h \
@@ -68,4 +69,4 @@ HEADERS += \
 	pvinverter.h \
 	settings.h \
 	types.h \
-    sensorset.h
+	sensorset.h \

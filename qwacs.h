@@ -9,10 +9,12 @@
 #include "busitem_cons.h"
 #include "pvinverter.h"
 #include "settings.h"
+#include "QsLog.h"
+
+#include "json/json.h"
+
 
 #include "addsetting.h"
-
-#include "QsLog.h"
 
 class Qwacs : public QObject
 {
@@ -50,6 +52,7 @@ private:
 	QMap<Connections, PVinverter *> mPVinverterMap;
 	QStringList mSensorIdList;
 	AddSetting mAddSetting;
+	JSON &json;
 };
 
 #endif // QWACS_H
