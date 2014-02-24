@@ -45,12 +45,12 @@ void Gateway::getSensor(const QString & id)
 	}
 }
 
-void Gateway::blinkSensor(const QString & id, const int sec)
+void Gateway::blinkSensor(const QString & id, const int seconds)
 {
-	QLOG_INFO() << "[Gateway] blinkSensor() id = " << id << " time : " << sec;
+	QLOG_INFO() << "[Gateway] blinkSensor() id = " << id << " time : " << seconds;
 	if (mConnected) {
 		//mState = BLINK_SENSOR;
-		mHTTPConnection.getURL("http://"+mHostname+"/API/devices/dect/"+id+"/blink/"+QString::number(sec));
+		mHTTPConnection.getURL("http://"+mHostname+"/API/devices/dect/"+id+"/blink/"+QString::number(seconds));
 	}
 }
 
@@ -184,12 +184,15 @@ void Gateway::httpResult(QString str)
 		if (ok) {
 			for (int i = 0; i < resultList.size(); ++i) {
 				JsonObject result = resultList[i].toMap();
-				QString id = result["id"].toString();
-				if (!mSensorMap.contains(id))
-					emit sensorFound(addSensor(id, result));
-				else
-					updateSensor(mSensorMap[id], result);
-				emit sensorUpdated(mSensorMap[id]);
+				bool connected = result["connected"].toBool();
+				if (connected) {
+					QString id = result["id"].toString();
+					if (!mSensorMap.contains(id))
+						emit sensorFound(addSensor(id, result));
+					else
+						updateSensor(mSensorMap[id], result);
+					emit sensorUpdated(mSensorMap[id]);
+				}
 			}
 		}
 		else
