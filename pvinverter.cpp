@@ -10,7 +10,7 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 	QLOG_INFO()  << "[PVinverter::PVinverter()] service = " << service;
 	// This looks a bit odd (with the above init constructor) but I cannot see
 	// another way to get a new connection which is not related to the applciation
-	mDBus = mDBus.connectToBus(DBUS_CONNECTION, service);
+	mDBus = mDBus.connectToBus(DBUS_TYPE, service);
 	mDBus.registerService(service);
 
 	mBusItemMap.insert(L1_Voltage, new BusItemProd);
