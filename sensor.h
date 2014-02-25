@@ -17,8 +17,8 @@ public:
 	void setName(QString name) { mName = name; }
 	void setConnected(bool connected) { mConnected = connected; }
 	void setVersion(QString version) { mVersion = version; }
-	void setVoltage(qreal value) { mVrms = value; }
-	void setCurrent(qreal value) { mIrms = value; }
+	void setVoltage(double value) { mVrms = value; }
+	void setCurrent(double value) { mIrms = value; }
 	void setPower(int value) { mPower = value; }
 	void setEnergyForward(uint value) { mEnergyForward = value; }
 	void setEnergyReverse(uint value) { mEnergyReverse = value; }
@@ -33,8 +33,8 @@ public slots:
 	const QString getName() const { return mName; }
 	bool getConnected() const { return mConnected; }
 	const QString getVersion() const { return mVersion; }
-	qreal getVoltage() const { return mVrms; }
-	qreal getCurrent() const { return mIrms; }
+	double getVoltage() const { return mVrms; }
+	double getCurrent() const { return mIrms; }
 	int getPower() const { return mPower; }
 	uint getEnergyForward() const { return mEnergyForward; }
 	uint  getEnergyReverse() const { return mEnergyReverse; }
@@ -52,8 +52,8 @@ private:
 	QString mName;
 	bool mConnected;
 	QString mVersion;
-	qreal mVrms; /* V */
-	qreal mIrms; /* A */
+	double mVrms; /* V */
+	double mIrms; /* A */
 	int mPower; /* W */
 	uint mEnergyForward; /* Wh */
 	uint mEnergyReverse; /* Wh */

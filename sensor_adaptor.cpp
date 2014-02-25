@@ -40,17 +40,17 @@ QString SensorAdaptor::getVersion()
 	return value;
 }
 
-qreal SensorAdaptor::getVoltage()
+double SensorAdaptor::getVoltage()
 {
-	qreal value;
-	QMetaObject::invokeMethod(parent(), "getVoltage", Q_RETURN_ARG(qreal, value));
+	double value;
+	QMetaObject::invokeMethod(parent(), "getVoltage", Q_RETURN_ARG(double, value));
 	return value;
 }
 
-qreal SensorAdaptor::getCurrent()
+double SensorAdaptor::getCurrent()
 {
-	qreal value;
-	QMetaObject::invokeMethod(parent(), "getCurrent", Q_RETURN_ARG(qreal, value));
+	double value;
+	QMetaObject::invokeMethod(parent(), "getCurrent", Q_RETURN_ARG(double, value));
 	return value;
 }
 

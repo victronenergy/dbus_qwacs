@@ -157,7 +157,7 @@ void PVinverter::unregisterPhase(const Phases phase)
 	mEnergyReverse[index] = 0;
 }
 
-void PVinverter::setVoltage(const Phases phase, const qreal value)
+void PVinverter::setVoltage(const Phases phase, const double value)
 {
 	if (phase == NoPhase) {
 		QLOG_ERROR() << "[PVinverter::setVoltage] Unknown phase: " << phase;
@@ -187,7 +187,7 @@ void PVinverter::setVoltage(const Phases phase, const qreal value)
 	}
 }
 
-void PVinverter::setCurrent(const Phases phase, const qreal value)
+void PVinverter::setCurrent(const Phases phase, const double value)
 {
 	if (phase == NoPhase) {
 		QLOG_ERROR() << "[PVinverter::setCurrent] Unknown phase: " << phase;
@@ -216,7 +216,7 @@ void PVinverter::setCurrent(const Phases phase, const qreal value)
 	default:
 		return;
 	}
-	qreal sum = 0;
+	double sum = 0;
 	const int listSize = mCurrent.size();
 	for (int i = 0; i < listSize; ++i)
 		sum += mCurrent.at(i);

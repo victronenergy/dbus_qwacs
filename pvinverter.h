@@ -17,8 +17,8 @@ public:
 	void unregisterConnection(const Connections conn);
 	void unregisterPhase(const Phases phase);
 
-	void setVoltage(const Phases phase, const qreal value);
-	void setCurrent(const Phases phase, const qreal value);
+	void setVoltage(const Phases phase, const double value);
+	void setCurrent(const Phases phase, const double value);
 	void setPower(const Phases phase, const int value);
 	void setEnergyForward(const Phases phase, const uint value);
 	void setEnergyReverse(const Phases phase, const uint value);
@@ -39,8 +39,7 @@ private:
 	QDBusConnection mDBus;
 	QMap<Items, BusItemProd *> mBusItemMap;
 
-	//QList<qreal> mVoltage;
-	QList<qreal> mCurrent;
+	QList<double> mCurrent;
 	QList<int> mPower;
 	QList<uint> mEnergyForward;
 	QList<uint> mEnergyReverse;

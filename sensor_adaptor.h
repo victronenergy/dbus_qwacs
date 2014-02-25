@@ -13,8 +13,8 @@ class SensorAdaptor : public QDBusAbstractAdaptor
 	Q_PROPERTY(QString name READ getName)
 	Q_PROPERTY(bool connected READ getConnected)
 	Q_PROPERTY(QString version READ getVersion)
-	Q_PROPERTY(qreal voltage READ getVoltage)
-	Q_PROPERTY(qreal current READ getCurrent)
+	Q_PROPERTY(double voltage READ getVoltage)
+	Q_PROPERTY(double current READ getCurrent)
 	Q_PROPERTY(int power READ getPower)
 	Q_PROPERTY(uint energyForward READ getEnergyForward)
 	Q_PROPERTY(uint energyReverse READ getEnergyReverse)
@@ -27,8 +27,8 @@ public:
 	QString getName();
 	bool getConnected();
 	QString getVersion();
-	qreal getVoltage();
-	qreal getCurrent();
+	double getVoltage();
+	double getCurrent();
 	int getPower();
 	uint getEnergyForward();
 	uint getEnergyReverse();

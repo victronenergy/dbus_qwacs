@@ -8,15 +8,15 @@ class sensorset
 public:
 	sensorset();
 
-	qreal getVoltage();
-	qreal getCurrent();
+	double getVoltage();
+	double getCurrent();
 	int getPower();
 	uint getEnergyForward();
 	uint getEnergyReverse();
 
 private:
-	QList<qreal> mVoltageMap;
-	QList<qreal> mCurrentMap;
+	QList<double> mVoltageMap;
+	QList<double> mCurrentMap;
 	QList<int> mPowerMap;
 	QList<uint> mEnergyForwardMap;
 	QList<uint> mEnergyReverseMap;
