@@ -66,8 +66,6 @@ private:
 		GET_UPLINK
 	};
 
-	//Sensor * addSensor(const QString &id, const JsonObject &result);
-	//void updateSensor(Sensor * const sens, const JsonObject &result);
 	Sensor * addSensor(const QString &id, const QVariantMap &result);
 	void updateSensor(Sensor * const sens, const QVariantMap &result);
 
@@ -98,7 +96,6 @@ private:
 	QString mPartNr;
 	uint mUpdays;
 	uint mUphours;
-
 };
 
 #endif // GATEWAY_H

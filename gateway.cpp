@@ -94,8 +94,7 @@ Sensor * Gateway::addSensor(const QString &id, const QVariantMap &result)
 
 void Gateway::updateSensor(Sensor * const sens, const QVariantMap &result)
 {
-	//JsonObject electricity;
-	QVariantMap electricity; // = JSON::instance().parse(jsonString);
+	QVariantMap electricity;
 
 	if (sens) {
 		bool connected = result["connected"].toBool();
@@ -154,81 +153,57 @@ void Gateway::httpResult(QString str)
 		break;
 	case GET_VERSION:
 	{
-		bool ok = true;
-		//JsonObject result = QtJson::parse(str, ok).toMap();
 		QVariantMap result = JSON::instance().parse(str).toMap();
-		if (ok) {
-			setCommonName(result["commonName"].toString());
-			setFirmwareVersion(result["firmwareVersion"].toString());
-			setArchFlavVers(result["archFlavVers"].toString());
-			setSerialNr(result["serialNr"].toString());
-			setPartNr(result["partNr"].toString());
-			setUpdays(result["updays"].toUInt());
-			setUphours(result["uphours"].toUInt());
-			propertiesUpdated();
-			if (!mGotGatewayInfo) {
-				emit gatewayFound(mHostname);
-				mGotGatewayInfo = true;
-				mSensTimer.start(2490);
-			}
-			getSensorList();
+		setCommonName(result["commonName"].toString());
+		setFirmwareVersion(result["firmwareVersion"].toString());
+		setArchFlavVers(result["archFlavVers"].toString());
+		setSerialNr(result["serialNr"].toString());
+		setPartNr(result["partNr"].toString());
+		setUpdays(result["updays"].toUInt());
+		setUphours(result["uphours"].toUInt());
+		propertiesUpdated();
+		if (!mGotGatewayInfo) {
+			emit gatewayFound(mHostname);
+			mGotGatewayInfo = true;
+			mSensTimer.start(2490);
 		}
-		else {
-			QLOG_ERROR() << "QtJson: Cannot parse string to Map: " << str;
-			mState = IDLE;
-		}
+		getSensorList();
 		break;
 	}
 	case GET_SENSORLIST:
 	{
-		bool ok = true;
-		//QList<QVariant> resultList = QtJson::parse(str, ok).toList();
 		QList<QVariant> resultList = JSON::instance().parse(str).toList();
-		if (ok) {
-			for (int i = 0; i < resultList.size(); ++i) {
-				//JsonObject result = resultList[i].toMap();
-				QVariantMap result = resultList[i].toMap();
-				bool connected = result["connected"].toBool();
-				if (connected) {
-					QString id = result["id"].toString();
-					if (!mSensorMap.contains(id))
-						emit sensorFound(addSensor(id, result));
-					else
-						updateSensor(mSensorMap[id], result);
-					emit sensorUpdated(mSensorMap[id]);
-				}
+		for (int i = 0; i < resultList.size(); ++i) {
+			//JsonObject result = resultList[i].toMap();
+			QVariantMap result = resultList[i].toMap();
+			bool connected = result["connected"].toBool();
+			if (connected) {
+				QString id = result["id"].toString();
+				if (!mSensorMap.contains(id))
+					emit sensorFound(addSensor(id, result));
+				else
+					updateSensor(mSensorMap[id], result);
+				emit sensorUpdated(mSensorMap[id]);
 			}
 		}
-		else
-			QLOG_ERROR() << "QtJson: Cannot parse string to List: " << str;
 		mState = IDLE;
 		break;
 	}
 	case GET_SENSORDATA:
 	{
 		QLOG_TRACE() << "[Manager] State GET_SENSORDATA";
-		bool ok = true;
-		//JsonObject result = QtJson::parse(str, ok).toMap();
 		QVariantMap result = JSON::instance().parse(str).toMap();
-		if (ok) {
-			QString id = result["id"].toString();
-			updateSensor(mSensorMap[id], result);
-		}
-		else
-			QLOG_ERROR() << "QtJson: Cannot parse string to Map: " << str;
+		QString id = result["id"].toString();
+		updateSensor(mSensorMap[id], result);
 		mState = IDLE;
 		break;
 	}
 	case GET_UPLINK:
 	{
 		QLOG_INFO() << "[Gateway::httpResult] " << endl << str;
-		bool ok = true;
-		//JsonObject result = QtJson::parse(str, ok).toMap();
 		QVariantMap result = JSON::instance().parse(str).toMap();
-		if (ok) {
-			mUplinkStatus = result["uplink"].toString();
-			emit UplinkStatus(mUplinkStatus);
-		}
+		mUplinkStatus = result["uplink"].toString();
+		emit UplinkStatus(mUplinkStatus);
 		mState = IDLE;
 		break;
 	}
