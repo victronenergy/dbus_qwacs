@@ -6,6 +6,7 @@
 
 # Add more folders to ship with the application, here
 target.path = /opt/qwacs
+INSTALLS += target
 
 machine=$$(MACHINE)
 contains(machine,ccgx) {
@@ -70,3 +71,6 @@ HEADERS += \
 	settings.h \
 	types.h \
 	sensorset.h \
+
+# suppress the mangling of va_arg has changed for gcc 4.4
+QMAKE_CXXFLAGS += -Wno-psabi
