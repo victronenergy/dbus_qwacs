@@ -13,6 +13,11 @@ void httpRequest::getURL(QString str)
 	nam->get(QNetworkRequest(QUrl(str)));
 }
 
+void httpRequest::postURL(QString str)
+{
+	nam->post(QNetworkRequest(QUrl(str)), QByteArray());
+}
+
 void httpRequest::finishedSlot(QNetworkReply* reply)
 {
 	QVariant statusCodeV =	reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);

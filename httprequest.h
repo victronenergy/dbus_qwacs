@@ -15,7 +15,7 @@ public:
 	httpRequest(QObject *parent = 0);
 
 	void getURL(QString str);
-
+	void postURL(QString str);
 signals:
 	void result(QString str);
 
