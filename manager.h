@@ -22,10 +22,10 @@ signals:
 public slots:
 	bool getGatewayConnected() { return mGatewayConnected; }
 	QString getHostname() { return mHostname; }
-	QStringList getSensors();
+	QStringList getSensors() { return sensorList; }
 
 private slots:
-	void addSensor(const QString &id);
+	void addSensor(const QString &id) { sensorList << id; }
 
 private:
 	QString mHostname;

@@ -7,7 +7,7 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 	QObject(parent),
 	mDBus(service)
 {
-	QLOG_INFO()  << "[PVinverter::PVinverter()] service = " << service;
+	QLOG_INFO()  << "[PVinverter] Add service: " << service;
 	// This looks a bit odd (with the above init constructor) but I cannot see
 	// another way to get a new connection which is not related to the applciation
 	mDBus = mDBus.connectToBus(DBUS_TYPE, service);
@@ -49,7 +49,6 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 
 void PVinverter::registerConnection(const Connections pos)
 {
-	QLOG_INFO()  << "[PVinverter::registerPosition()] position = " << pos;
 	switch (pos)
 	{
 	case ACIn1:
@@ -68,6 +67,8 @@ void PVinverter::registerConnection(const Connections pos)
 		QLOG_ERROR() << "[PVinverter::registerPosition] Unknown position: " << pos;
 		break;
 	}
+	QLOG_INFO()  << "[PVinverter] Register position: " << mBusItemMap[Position]->getText();
+
 	mBusItemMap[Version]->setValue(cVERSION);
 	mBusItemMap[Version]->setText(cVERSION);
 	mBusItemMap[Name]->setValue(cNAME);
@@ -76,7 +77,6 @@ void PVinverter::registerConnection(const Connections pos)
 	mDBus.registerObject("/Management/Name", mBusItemMap[Name]);
 	mDBus.registerObject("/Position", mBusItemMap[Position]);
 	mDBus.registerObject("/NumberOfPhases", mBusItemMap[NumberOfPhases]);
-	//mDBus.registerObject("/AC/Voltage", mBusItemMap[Voltage]);
 	mDBus.registerObject("/AC/Current", mBusItemMap[Current]);
 	mDBus.registerObject("/AC/Power", mBusItemMap[Power]);
 	mDBus.registerObject("/AC/Energy/Forward", mBusItemMap[EnergyForward]);
@@ -95,14 +95,14 @@ void PVinverter::unregisterConnection(const Connections conn)
 void PVinverter::registerPhase(const Phases phase)
 {
 	if (phase == NoPhase) {
-		QLOG_ERROR() << "[PVinverter::registerPhase] Unknown phase: " << phase;
+		QLOG_ERROR() << "[PVinverter] Unknown phase: " << phase;
 		return;
-	} else
-		QLOG_INFO()  << "[PVinverter::registerPhase()] phase = " << phase;
+	}
 
 	switch (phase)
 	{
 	case L1:
+		QLOG_INFO()  << "[PVinverter] Register phase L1";
 		mDBus.registerObject("/AC/L1/Voltage", mBusItemMap[L1_Voltage]);
 		mDBus.registerObject("/AC/L1/Current", mBusItemMap[L1_Current]);
 		mDBus.registerObject("/AC/L1/Power", mBusItemMap[L1_Power]);
@@ -110,6 +110,7 @@ void PVinverter::registerPhase(const Phases phase)
 		mDBus.registerObject("/AC/L1/Energy/Reverse", mBusItemMap[L1_EnergyReverse]);
 		break;
 	case L2:
+		QLOG_INFO()  << "[PVinverter] Register phase L2";
 		mDBus.registerObject("/AC/L2/Voltage", mBusItemMap[L2_Voltage]);
 		mDBus.registerObject("/AC/L2/Current", mBusItemMap[L2_Current]);
 		mDBus.registerObject("/AC/L2/Power", mBusItemMap[L2_Power]);
@@ -117,6 +118,7 @@ void PVinverter::registerPhase(const Phases phase)
 		mDBus.registerObject("/AC/L2/Energy/Reverse", mBusItemMap[L2_EnergyReverse]);
 		break;
 	case L3:
+		QLOG_INFO()  << "[PVinverter] Register phase L3";
 		mDBus.registerObject("/AC/L3/Voltage", mBusItemMap[L3_Voltage]);
 		mDBus.registerObject("/AC/L3/Current", mBusItemMap[L3_Current]);
 		mDBus.registerObject("/AC/L3/Power", mBusItemMap[L3_Power]);

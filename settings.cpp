@@ -82,7 +82,7 @@ Positions Settings::getPosition(const QString &id)
 
 Connections Settings::getConnection(const QString &id)
 {
-	QLOG_TRACE() << "[Settings::getConnection()] id: " << id;
+	//QLOG_TRACE() << "[Settings::getConnection()] id: " << id;
 	if (mIdPositionMap.contains(id))
 		return getConnection(mIdPositionMap[id]);
 	return NoConn;
@@ -90,7 +90,7 @@ Connections Settings::getConnection(const QString &id)
 
 Connections Settings::getConnection(const Positions pos)
 {
-	QLOG_TRACE() << "[Settings::getConnection()] pos: " << pos;
+	//QLOG_TRACE() << "[Settings::getConnection()] pos: " << pos;
 	switch (pos)
 	{
 	case None:
@@ -150,7 +150,7 @@ uint Settings::getNumberOfPhases(Connections conn)
 			phases++;
 		++i;
 	}
-	QLOG_INFO() << "[Settings::mConnectionNumOfPhasesMap()] conn: " << conn << " phases: " << phases;
+	//QLOG_INFO() << "[Settings::mConnectionNumOfPhasesMap()] conn: " << conn << " phases: " << phases;
 	return phases;
 }
 

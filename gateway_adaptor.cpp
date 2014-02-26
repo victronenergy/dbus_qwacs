@@ -58,14 +58,12 @@ uint GatewayAdaptor::getUphours()
 
 void GatewayAdaptor::BlinkSensor(const QString & id , const int seconds)
 {
-	QLOG_INFO() << "[GatewayAdaptor] blinkSensor() id = " << id;//d << " time : " << seconds;
 	QMetaObject::invokeMethod(parent(), "blinkSensor", Q_ARG(QString, id), Q_ARG(int, seconds));
 	return;
 }
 
 void GatewayAdaptor::GetUplink()
 {
-	QLOG_INFO() << "[GatewayAdaptor] Blink()";
 	QMetaObject::invokeMethod(parent(), "getUplink");
 }
 

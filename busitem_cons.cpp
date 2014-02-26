@@ -20,13 +20,10 @@ QVariant BusItemCons::getValue()
 
 void BusItemCons::PropertiesChanged(const QVariantMap &changes)
 {
-	QLOG_TRACE() << "[BusItemCons::PropertiesChanged]";
-
 	QMapIterator<QString, QVariant> i(changes);
-
 	while (i.hasNext()) {
 		i.next();
-		QLOG_TRACE() << "Item: " << i.key() << ":" << i.value().toString();
+		QLOG_TRACE() << "[BusItemCons] Properties changed: " << i.key() << "=" << i.value().toString();
 		if (i.key() == "Value") {
 			if (i.value().isValid()) {
 				mValueValid = true;

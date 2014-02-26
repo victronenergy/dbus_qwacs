@@ -51,7 +51,7 @@ private:
 	Gateway mGateway;
 	QMap<Connections, PVinverter *> mPVinverterMap;
 	QStringList mSensorIdList;
-	AddSetting mAddSetting;
+	//AddSetting mAddSetting;
 	JSON &json;
 };
 
