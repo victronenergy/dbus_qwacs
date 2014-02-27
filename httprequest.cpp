@@ -1,3 +1,4 @@
+#include <QNetworkRequest>
 #include "httprequest.h"
 #include "QsLog.h"
 
@@ -15,7 +16,10 @@ void httpRequest::getURL(QString str)
 
 void httpRequest::postURL(QString str)
 {
-	nam->post(QNetworkRequest(QUrl(str)), QByteArray());
+	QNetworkRequest req;
+	req.setUrl(QUrl(str));
+	req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+	nam->post(req, QByteArray());
 }
 
 void httpRequest::finishedSlot(QNetworkReply* reply)
