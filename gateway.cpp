@@ -49,7 +49,7 @@ void Gateway::blinkSensor(const QString & id, const int seconds)
 {
 	QLOG_INFO() << "[Gateway] blinkSensor() id = " << id << " time : " << seconds;
 	if (mConnected) {
-		//mState = BLINK_SENSOR;
+		mState = BLINK_SENSOR;
 		mHTTPConnection.postURL("http://"+mHostname+"/API/devices/dect/"+id+"/blink/"+QString::number(seconds));
 	}
 }
@@ -77,7 +77,7 @@ void Gateway::setUplink(const bool on)
 	QLOG_INFO() << "[Gateway] setUplink() on = " << on;
 	if (mConnected) {
 		//mState = BLINK_SENSOR;
-		//mHTTPConnection.getURL("http://"+mHostname+"/API/net/uplink/"+QString(on ? "1" : "0"));
+		mHTTPConnection.postURL("http://"+mHostname+"/API/net/uplink/"+QString(on ? "1" : "0"));
 	}
 }
 
@@ -142,8 +142,8 @@ void Gateway::propertiesUpdated()
 
 void Gateway::httpResult(QString str)
 {
-	QLOG_TRACE() << "[Gateway] http reply: " << endl << str;
-	str.replace("\n","");
+	//QLOG_TRACE() << "[Gateway] http reply: " << endl << str;
+	//str.replace("\n","");
 
 	switch (mState) {
 	case IDLE:
@@ -196,6 +196,11 @@ void Gateway::httpResult(QString str)
 		QString id = result["id"].toString();
 		updateSensor(mSensorMap[id], result);
 		mState = IDLE;
+		break;
+	}
+	case BLINK_SENSOR:
+	{
+		QLOG_TRACE() << "[Gateway] Blink sensor" << str;
 		break;
 	}
 	case GET_UPLINK:
