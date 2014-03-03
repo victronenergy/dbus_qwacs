@@ -67,7 +67,7 @@ void Qwacs::initLogger(QsLogging::Level logLevel)
 
 void Qwacs::gatewayFound(const QString &hostname)
 {
-	QLOG_INFO()  << "[Qwacs     ] Gateway found: " << hostname;
+	QLOG_INFO()  << "[Qwacs] Gateway found: " << hostname;
 	mManager.setHostname(hostname);
 	mDBus.registerObject("/Gateway", &mGateway);
 }
@@ -146,12 +146,12 @@ void Qwacs::ssdpNewDevice(const QString &usn, const QString &location,
 							const QString &st, const QString &ext,
 							const QString &server, const QString &cacheControl)
 {
-	//Q_UNUSED(st);
-	//Q_UNUSED(ext);
-	//Q_UNUSED(server);
+	Q_UNUSED(st);
+	Q_UNUSED(ext);
+	Q_UNUSED(server);
 	Q_UNUSED(cacheControl);
-	QLOG_INFO() << "SSDP Device: " << usn << ", " << location << ", " << st << ", " << ext << ", " << server;
-	if (usn == "uuid:tim-001-0122::urn:schemas-quby-nl:service:DectGateway:1") {
+	//QLOG_INFO() << "SSDP Device: " << usn << ", " << location << ", " << st << ", " << ext << ", " << server;
+	if (usn.contains("urn:schemas-quby-nl:service:DectGateway:1")) {
 		QUrl url(location);
 		mGateway.setHostname(url.encodedHost());
 		if (!mGateway.getConnected()) {
