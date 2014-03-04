@@ -14,8 +14,12 @@ public:
 
 	void registerConnection(const Connections conn);
 	void registerPhase(const Phases phase);
+	void registerPhases();
 	void unregisterConnection(const Connections conn);
 	void unregisterPhase(const Phases phase);
+
+	void invalidatePhase(const Phases phase);
+	void invalidateTotals();
 
 	void setVoltage(const Phases phase, const double value);
 	void setCurrent(const Phases phase, const double value);
@@ -23,6 +27,7 @@ public:
 	void setEnergyForward(const Phases phase, const uint value);
 	void setEnergyReverse(const Phases phase, const uint value);
 	void setNumberOfPhases(const uint value);
+	void setConnected(bool connected);
 public slots:
 
 signals:
@@ -33,7 +38,8 @@ private:
 		L2_Voltage, L2_Current, L2_Power, L2_EnergyForward, L2_EnergyReverse,
 		L3_Voltage, L3_Current, L3_Power, L3_EnergyForward, L3_EnergyReverse,
 		Voltage, Current, Power, EnergyForward, EnergyReverse,
-		NumberOfPhases, Position, Version, Name
+		NumberOfPhases, Position,
+		Version, Name, Connection, ProductName, ProductId, Connected
 	};
 
 	QDBusConnection mDBus;
