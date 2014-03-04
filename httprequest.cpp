@@ -32,7 +32,7 @@ void httpRequest::finishedSlot(QNetworkReply* reply)
 		emit result(string);
 	}
 	else {
-		QLOG_ERROR() << "httpRequest::finishedSlot: " << statusCodeV.toString();
+		emit result("ERROR "+statusCodeV.toString());
 	}
 	reply->deleteLater();
 }
