@@ -1,13 +1,14 @@
 #include "busitem_prod.h"
 #include "QsLog.h"
 
+QStringList BusItemProd::invalidValue = QStringList();
+
 BusItemProd::BusItemProd(QObject *parent) :
 	QObject(parent),
 	mBusItem(0)
 {
 	mBusItem = new BusItemAdaptor(this);
-	mValue = QVariant();
-	mValid = false;
+	mValue = invalidValue;
 	mBusItem->connect(this, SIGNAL(PropertiesChanged(const QVariantMap &)), SIGNAL(PropertiesChanged(const QVariantMap &)));
 }
 
@@ -17,7 +18,6 @@ BusItemProd::BusItemProd(const QVariant &value, QObject *parent) :
 {
 	mBusItem = new BusItemAdaptor(this);
 	mValue = value;
-	mValid = true;
 }
 
 BusItemProd::BusItemProd(const QString &value, QObject *parent) :
@@ -26,7 +26,6 @@ BusItemProd::BusItemProd(const QString &value, QObject *parent) :
 {
 	mBusItem = new BusItemAdaptor(this);
 	mValue = QVariant(value);
-	mValid = true;
 }
 
 void BusItemProd::setValue(const QVariant &value)
@@ -36,7 +35,6 @@ void BusItemProd::setValue(const QVariant &value)
 
 	mChanges.insert("Value", value);
 	mValue = value;
-
 }
 
 void BusItemProd::setText(const QString &text)
@@ -46,6 +44,13 @@ void BusItemProd::setText(const QString &text)
 
 	mChanges.insert("Text", text);
 	mText = text;
+}
+
+void BusItemProd::invalidate()
+{
+	setValue(invalidValue);
+	setText("");
+	propertiesUpdated();
 }
 
 void BusItemProd::propertiesUpdated()

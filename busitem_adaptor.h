@@ -10,7 +10,6 @@ class BusItemAdaptor : public QDBusAbstractAdaptor
 	Q_OBJECT
 	Q_CLASSINFO("D-Bus Interface", "com.victronenergy.BusItem")
 	Q_PROPERTY(QString Text READ text)
-	Q_PROPERTY(bool Valid READ valid)
 	Q_PROPERTY(QDBusVariant Value READ value WRITE setValue)
 
 public:
@@ -26,7 +25,6 @@ public slots:
 	QDBusVariant GetMax();
 	QDBusVariant GetMin();
 	QString GetText();
-	bool GetValid();
 	QDBusVariant GetValue();
 	int SetValue(const QDBusVariant &value);
 

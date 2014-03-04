@@ -53,13 +53,6 @@ QString BusItemAdaptor::GetText()
 	return value;
 }
 
-bool BusItemAdaptor::GetValid()
-{
-	bool value;
-	QMetaObject::invokeMethod(parent(), "getValid", Q_RETURN_ARG(bool, value));
-	return value;
-}
-
 QDBusVariant BusItemAdaptor::GetValue()
 {
 	QDBusVariant value;

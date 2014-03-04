@@ -6,7 +6,7 @@
 class BusItemProd : public QObject
 {
 	Q_OBJECT
-	Q_PROPERTY(QDBusVariant Value READ getValue)
+	Q_PROPERTY(QDBusVariant value READ getValue)
 
 public:
 	BusItemProd(QObject *parent = 0);
@@ -14,24 +14,24 @@ public:
 	BusItemProd(const QString &value, QObject *parent = 0);
 
 	void setValue(const QVariant &value);
-	void setValid(const bool valid) { mValid = valid; }
 	void setText(const QString &text);
+	void invalidate();
 
 public slots:
-	QDBusVariant getValue() {return QDBusVariant(mValue); }
-	bool getValid() { return mValid; }
+	QDBusVariant getValue() { return QDBusVariant(mValue); }
 	QString getText() { return mText; }
-
 	void propertiesUpdated();
 
 signals:
 	void PropertiesChanged(const QVariantMap &changes);
 
 private:
+	static QStringList invalidValue;
+
 	BusItemAdaptor* mBusItem;
 	QVariantMap mChanges;
 
-	bool mValid;
+	//bool mInitialized;
 	QVariant mValue;
 	QString mText;
 };
