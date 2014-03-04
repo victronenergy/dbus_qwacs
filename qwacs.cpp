@@ -75,17 +75,19 @@ void Qwacs::gatewayFound(const QString &hostname)
 void Qwacs::sensorFound(Sensor * const sens)
 {
 	QString id = sens->getID();
-	Connections conn = mSettings.getConnection(id);
+	//Connections conn = mSettings.getConnection(id);
 
 	QLOG_INFO()  << "[Qwacs] Sensor found: " << id;
 	mSensorIdList.append(id);
+	/*
 	if (conn != NoConn ) {
 		if (!mPVinverterMap.contains(conn)) {
 			mPVinverterMap.insert(conn, new PVinverter("com.victronenergy.pvinverter.qwacs_di"+QString::number(mDBusInstance++)));
 			mPVinverterMap[conn]->registerConnection(conn);
 		}
-		addSensorToPVinverter(id);
-	}
+		//;
+	}*/
+	addSensorToPVinverter(id);
 	id.replace(".","");
 	mDBus.registerObject("/Gateway/Sensors/"+id, sens);
 }
@@ -95,6 +97,14 @@ void Qwacs::addSensorToPVinverter(const QString &id)
 	Connections conn = mSettings.getConnection(id);
 
 	QLOG_INFO()  << "[Qwacs] Add sensor to pv-inverter: " << id;
+
+	if (conn != NoConn ) {
+		if (!mPVinverterMap.contains(conn)) {
+			mPVinverterMap.insert(conn, new PVinverter("com.victronenergy.pvinverter.qwacs_di"+QString::number(mDBusInstance++)));
+			mPVinverterMap[conn]->registerConnection(conn);
+		}
+	}
+/*
 	if (conn != NoConn ) {
 		if (mSensorIdList.contains(id)) {
 			Phases phase = mSettings.getPhase(id);
@@ -103,6 +113,7 @@ void Qwacs::addSensorToPVinverter(const QString &id)
 		mPVinverterMap[conn]->setNumberOfPhases(mSettings.getNumberOfPhases(conn));
 	} else
 		QLOG_WARN()  << "[Qwacs] No connection found for sensor with id: " << id;
+*/
 }
 
 void Qwacs::removeSensorFromPVinverter(const QString &id, const Connections conn)
@@ -111,10 +122,11 @@ void Qwacs::removeSensorFromPVinverter(const QString &id, const Connections conn
 		QLOG_INFO()  << "[Qwacs] Remove sensor from pv-inverter: " << id << " conn: " << conn;
 		if (conn != NoConn ) {
 			if (mPVinverterMap.contains(conn)) {
-				mPVinverterMap[conn]->setNumberOfPhases(mSettings.getNumberOfPhases(conn));
+				//mPVinverterMap[conn]->setNumberOfPhases(mSettings.getNumberOfPhases(conn));
 				Phases phase = mSettings.getPhase(id);
 				if (phase != NoPhase) {
-					mPVinverterMap[conn]->unregisterPhase(phase);
+					//mPVinverterMap[conn]->unregisterPhase(phase);
+					mPVinverterMap[conn]->invalidatePhase(phase);
 				} else
 					QLOG_WARN()  << "[Qwacs::removeSensorFromPVinverter()] No phase found for sensor with id: " << id;
 			} else
@@ -128,9 +140,10 @@ void Qwacs::sensorUpdated(Sensor * const sens)
 {
 	QString id = sens->getID();
 
+	//QLOG_INFO()  << "[Qwacs::sensorUpdated()] id = " << id;
 	if (mSensorIdList.contains(id)) {
-		//QLOG_TRACE()  << "[Qwacs::sensorUpdated()] id = " << id;
 		Connections conn = mSettings.getConnection(id);
+		//QLOG_INFO()  << "[Qwacs] Sensor connected to " << conn;
 		if (conn != NoConn ) {
 			Phases phase = mSettings.getPhase(id);
 			mPVinverterMap[conn]->setVoltage(phase, sens->getVoltage());
