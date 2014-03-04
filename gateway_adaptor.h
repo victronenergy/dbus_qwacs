@@ -30,7 +30,8 @@ public:
 	uint getUphours();
 
 public slots: // DBus methods
-	void BlinkSensor(const QString & id, const int seconds);
+	void BlinkOn(const QString & id);
+	void BlinkOff(const QString & id);
 	void RegistrationMode(bool on);
 	void GetUplink();
 	void SetUplink(bool enable);

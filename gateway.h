@@ -36,13 +36,15 @@ public slots:
 	uint getUpdays() const { return mUpdays; }
 	uint getUphours() const { return mUphours; }
 
-	void blinkSensor(const QString & id, const int seconds);
+	void blinkOn(const QString & id);
+	void blinkOff(const QString & id);
 	void registrationMode(const bool on);
 	void getUplink();
 	void setUplink(const bool on);
 
 private slots:
 	void httpResult(QString str);
+	void blinkTimer();
 	void sensTimer();
 	void gateway(const QString &name, const QString &version);
 
@@ -55,17 +57,6 @@ signals:
 	void UplinkStatus(const QString & status);
 
 private:
-	enum State {
-		IDLE,
-		WAIT_FOR_CONNECTION,
-		GET_VERSION,
-		GET_CHECK,
-		GET_SENSORLIST,
-		GET_SENSORDATA,
-		BLINK_SENSOR,
-		GET_UPLINK
-	};
-
 	Sensor * addSensor(const QString &id, const QVariantMap &result);
 	void updateSensor(Sensor * const sens, const QVariantMap &result);
 
@@ -73,10 +64,11 @@ private:
 	bool mGotGatewayInfo;
 	QString mHostname;
 	QString mUplinkStatus;
-	State mState;
 	GatewayAdaptor* mAdaptor;
 	httpRequest mHTTPConnection;
 	QMap<QString, Sensor *> mSensorMap;
+	QTimer mBlinkTimer;
+	QString mBlinkSensorID;
 	QTimer mSensTimer;
 
 	// Dbus properties

@@ -56,9 +56,15 @@ uint GatewayAdaptor::getUphours()
 	return value;
 }
 
-void GatewayAdaptor::BlinkSensor(const QString & id , const int seconds)
+void GatewayAdaptor::BlinkOn(const QString & id)
 {
-	QMetaObject::invokeMethod(parent(), "blinkSensor", Q_ARG(QString, id), Q_ARG(int, seconds));
+	QMetaObject::invokeMethod(parent(), "blinkOn", Q_ARG(QString, id));
+	return;
+}
+
+void GatewayAdaptor::BlinkOff(const QString & id)
+{
+	QMetaObject::invokeMethod(parent(), "blinkOff", Q_ARG(QString, id));
 	return;
 }
 
