@@ -43,6 +43,8 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 	mBusItemMap.insert(ProductName, new BusItemProd);
 	mBusItemMap.insert(ProductId, new BusItemProd);
 	mBusItemMap.insert(Connected, new BusItemProd);
+	mBusItemMap.insert(FirmwareVersion, new BusItemProd);
+
 
 	for (int i = 0; i < L3; i++) {
 		//mVoltage.append(0);
@@ -53,27 +55,27 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 	}
 }
 
-void PVinverter::registerConnection(const Connections pos)
+void PVinverter::registerConnection(const Connections pos, const QString version)
 {
 	switch (pos)
 	{
 	case ACIn1:
 		mBusItemMap[Position]->setValue(0);
 		mBusItemMap[Position]->setText("AC Input 1");
-		mBusItemMap[ProductName]->setValue(cVE_PROD_NAME+" (AC In1)");
-		mBusItemMap[ProductName]->setText(cVE_PROD_NAME+" (AC In1)");
+		mBusItemMap[ProductName]->setValue(cVE_PROD_NAME+" on AC In1");
+		mBusItemMap[ProductName]->setText(cVE_PROD_NAME+" on AC In1");
 		break;
 	case ACOut:
 		mBusItemMap[Position]->setValue(1);
 		mBusItemMap[Position]->setText("AC Output");
-		mBusItemMap[ProductName]->setValue(cVE_PROD_NAME+" (AC Out)");
-		mBusItemMap[ProductName]->setText(cVE_PROD_NAME+" (AC Out)");
+		mBusItemMap[ProductName]->setValue(cVE_PROD_NAME+" on AC Out");
+		mBusItemMap[ProductName]->setText(cVE_PROD_NAME+" on AC Out");
 		break;
 	case ACIn2:
 		mBusItemMap[Position]->setValue(2);
 		mBusItemMap[Position]->setText("AC Input 2");
-		mBusItemMap[ProductName]->setValue(cVE_PROD_NAME+" (AC In2)");
-		mBusItemMap[ProductName]->setText(cVE_PROD_NAME+" (AC In2)");
+		mBusItemMap[ProductName]->setValue(cVE_PROD_NAME+" on AC In2");
+		mBusItemMap[ProductName]->setText(cVE_PROD_NAME+" on AC In2");
 		break;
 	default:
 		QLOG_ERROR() << "[PVinverter::registerPosition] Unknown position: " << pos;
@@ -86,10 +88,10 @@ void PVinverter::registerConnection(const Connections pos)
 
 	mBusItemMap[Version]->setValue(cVERSION);
 	mBusItemMap[Version]->setText(cVERSION);
-	mDBus.registerObject("/Mgmt/Version", mBusItemMap[Version]);
+	mDBus.registerObject("/Mgmt/ProcessVersion", mBusItemMap[Version]);
 	mBusItemMap[Name]->setValue(cNAME);
 	mBusItemMap[Name]->setText(cNAME);
-	mDBus.registerObject("/Mgmt/Name", mBusItemMap[Name]);
+	mDBus.registerObject("/Mgmt/ProcessName", mBusItemMap[Name]);
 	mBusItemMap[Connection]->setValue(cCONNECTION);
 	mBusItemMap[Connection]->setText(cCONNECTION);
 	mDBus.registerObject("/Mgmt/Connection", mBusItemMap[Connection]);
@@ -98,6 +100,9 @@ void PVinverter::registerConnection(const Connections pos)
 	mBusItemMap[ProductId]->setText(cVE_PROD_ID_QWACS);
 	mDBus.registerObject("/ProductId", mBusItemMap[ProductId]);
 	setConnected(true);
+	mDBus.registerObject("/Connected", mBusItemMap[Connected]);
+	setFirmwareVersion(version);
+	mDBus.registerObject("/FirmwareVersion", mBusItemMap[FirmwareVersion]);
 
 	//mBusItemMap[Name]->setValue(0);
 	//mBusItemMap[Name]->setText("0");
@@ -239,7 +244,7 @@ void PVinverter::invalidateTotals()
 	mBusItemMap[EnergyReverse]->invalidate();
 }
 
-void PVinverter::setConnected(bool connected)
+void PVinverter::setConnected(const bool connected)
 {
 	if (!connected) {
 		invalidatePhase(L1);
@@ -249,7 +254,14 @@ void PVinverter::setConnected(bool connected)
 	}
 	mBusItemMap[Connected]->setValue((int)connected);
 	mBusItemMap[Connected]->setText(QString((int)connected));
-	mDBus.registerObject("/Connected", mBusItemMap[Connected]);
+	mBusItemMap[Connected]->propertiesUpdated();
+}
+
+void PVinverter::setFirmwareVersion(const QString version)
+{
+	mBusItemMap[FirmwareVersion]->setValue("Gateway v"+version);
+	mBusItemMap[FirmwareVersion]->setText("Gateway v"+version);
+	mBusItemMap[FirmwareVersion]->propertiesUpdated();
 }
 
 void PVinverter::setVoltage(const Phases phase, const double value)
@@ -259,7 +271,7 @@ void PVinverter::setVoltage(const Phases phase, const double value)
 		return;
 	}
 
-	QString text(QString::number(value,'f',0)+" V");
+	QString text(QString::number(value,'f',0)+"V");
 	switch (phase)
 	{
 	case L1:
@@ -289,7 +301,7 @@ void PVinverter::setCurrent(const Phases phase, const double value)
 		return;
 	}
 
-	QString text(QString::number(value,'f',1)+" A");
+	QString text(QString::number(value,'f',1)+"A");
 	mCurrent[phase-1] = value;
 	switch (phase)
 	{
@@ -328,7 +340,7 @@ void PVinverter::setPower(const Phases phase, const int value)
 		return;
 	}
 
-	QString text(QString::number(value,'f',0)+" W");
+	QString text(QString::number(value,'f',0)+"W");
 	mPower[phase-1] = value;
 	switch (phase)
 	{
@@ -367,7 +379,7 @@ void PVinverter::setEnergyForward(const Phases phase, const uint value)
 		return;
 	}
 
-	QString text(QString::number(value,'f',0)+" Wh");
+	QString text(QString::number(value,'f',0)+"Wh");
 	mEnergyForward[phase-1] = value;
 	switch (phase)
 	{
@@ -406,7 +418,7 @@ void PVinverter::setEnergyReverse(const Phases phase, const uint value)
 		return;
 	}
 
-	QString text(QString::number(value,'f',0)+" Wh");
+	QString text(QString::number(value,'f',0)+"Wh");
 	mEnergyReverse[phase-1] = value;
 	switch (phase)
 	{

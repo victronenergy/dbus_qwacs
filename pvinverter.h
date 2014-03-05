@@ -12,7 +12,7 @@ class PVinverter : public QObject
 public:
 	PVinverter(const QString &service, QObject *parent = 0);
 
-	void registerConnection(const Connections conn);
+	void registerConnection(const Connections conn, const QString version);
 	void registerPhase(const Phases phase);
 	void registerPhases();
 	void unregisterConnection(const Connections conn);
@@ -39,12 +39,13 @@ private:
 		L3_Voltage, L3_Current, L3_Power, L3_EnergyForward, L3_EnergyReverse,
 		Voltage, Current, Power, EnergyForward, EnergyReverse,
 		NumberOfPhases, Position,
-		Version, Name, Connection, ProductName, ProductId, Connected
+		Version, Name, Connection, ProductName, ProductId, Connected, FirmwareVersion
 	};
+
+	void setFirmwareVersion(const QString version);
 
 	QDBusConnection mDBus;
 	QMap<Items, BusItemProd *> mBusItemMap;
-
 	QList<double> mCurrent;
 	QList<int> mPower;
 	QList<uint> mEnergyForward;
