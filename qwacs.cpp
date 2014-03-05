@@ -1,6 +1,3 @@
-#include <iostream>
-#include <unistd.h>
-
 #include <QtDBus/QtDBus>
 
 #include "qwacs.h"
@@ -20,14 +17,6 @@ Qwacs::Qwacs(QObject *parent) :
 	json(JSON::instance())
 {
 	mDBusInstance = 0;
-
-	QDBusConnection dbus = DBUS_CONNECTION;
-	if (!dbus.isConnected()) {
-		std::cerr << "DBus connection failed.";
-		exit(EXIT_FAILURE);
-	}
-	// Wait for local settings to become available on the DBus
-	waitForLocalSettings();
 
 	QVariant reply = mLogLevel.getValue();
 	initLogger(reply.isValid() ? (QsLogging::Level)reply.toInt() : QsLogging::TraceLevel);
@@ -66,23 +55,6 @@ Qwacs::~Qwacs()
 		delete i.value();
 		++i;
 	}
-}
-
-void Qwacs::waitForLocalSettings()
-{
-	// MMU: testing code
-	//if (mAddSetting.add("Sensors/OnPosition/ACIn1", "L1", "00.00.00.00.00", "s", 0, 0))
-	//	qDebug() << "ERROR: addSetting";
-	//addSetting.add("System/Sensors", "Test2", 10, "i", 3, 20);
-
-	std::cerr << "Wait for local setting on DBus... ";
-	BusItemCons settings("com.victronenergy.settings", "/Settings", DBUS_CONNECTION, 0);
-	QVariant reply = settings.getValue();
-	while (reply.isValid() == false) {
-		reply = settings.getValue();
-		usleep(500000);
-	}
-	std::cerr << "Found!" << std::endl;
 }
 
 void Qwacs::initLogger(QsLogging::Level logLevel)
