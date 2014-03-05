@@ -9,7 +9,6 @@ Gateway::Gateway(QObject *parent) :
 	mUphours = 0;
 	mConnected = false;
 	mGotGatewayInfo = false;
-	//mState = WAIT_FOR_CONNECTION;
 	mAdaptor = new GatewayAdaptor(this);
 	mAdaptor->connect(this, SIGNAL(PropertiesChanged(const QVariantMap &)), SIGNAL(PropertiesChanged(const QVariantMap &)));
 	connect (&mHTTPConnection, SIGNAL(result(QString)), this, SLOT(httpResult(QString)));
@@ -155,8 +154,13 @@ void Gateway::propertiesUpdated()
 
 void Gateway::httpResult(QString str)
 {
-	if (str.startsWith("ERROR")) {
-		QLOG_ERROR() << "[Gateway] HTTP " << str;
+	if (str.startsWith("NetworkError")) {
+		QLOG_ERROR() << "[Gateway] " << str;
+		if (mConnected) {
+			mSensTimer.stop();
+			mGotGatewayInfo = false;
+			emit gatewayLost();
+		}
 		return;
 	}
 
@@ -188,7 +192,6 @@ void Gateway::httpResult(QString str)
 				mGotGatewayInfo = true;
 				mSensTimer.start(2500);
 			}
-			getSensorList();
 		}
 	} else if (reply.type() == QVariant::List) {
 		// Because the reply type is list the result string is the sensor list
@@ -218,4 +221,5 @@ void Gateway::blinkTimer()
 void Gateway::sensTimer()
 {
 	getVersion();
+	getSensorList();
 }

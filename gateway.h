@@ -50,6 +50,7 @@ private slots:
 
 signals:
 	void gatewayFound(const QString &hostname);
+	void gatewayLost();
 	void sensorFound(Sensor * const sens);
 	void sensorFound(const QString &id);
 	void sensorUpdated(Sensor * const sens);
