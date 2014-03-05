@@ -24,15 +24,13 @@ void httpRequest::postURL(QString str)
 
 void httpRequest::finishedSlot(QNetworkReply* reply)
 {
-	QVariant statusCodeV =	reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-
 	if (reply->error() == QNetworkReply::NoError) {
 		QByteArray bytes = reply->readAll();  // bytes
 		QString string(QString::fromLocal8Bit(bytes));
 		emit result(string);
 	}
 	else {
-		emit result("ERROR "+statusCodeV.toString());
+		emit result("NetworkError: "+QString::number(reply->error()));
 	}
 	reply->deleteLater();
 }
