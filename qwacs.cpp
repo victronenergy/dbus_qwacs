@@ -1,3 +1,6 @@
+#include <iostream>
+#include <unistd.h>
+
 #include <QtDBus/QtDBus>
 
 #include "qwacs.h"
@@ -17,7 +20,16 @@ Qwacs::Qwacs(QObject *parent) :
 	json(JSON::instance())
 {
 	mDBusInstance = 0;
-	QVariant reply; // = mLogLevel.getValue();
+
+	QDBusConnection dbus = DBUS_CONNECTION;
+	if (!dbus.isConnected()) {
+		std::cerr << "DBus connection failed.";
+		exit(EXIT_FAILURE);
+	}
+	// Wait for local settings to become available on the DBus
+	waitForLocalSettings();
+
+	QVariant reply = mLogLevel.getValue();
 	initLogger(reply.isValid() ? (QsLogging::Level)reply.toInt() : QsLogging::TraceLevel);
 
 	mSDDPClient.start();
@@ -34,6 +46,7 @@ Qwacs::Qwacs(QObject *parent) :
 	mDBus.registerObject("/Manager", &mManager);
 
 	connect (&mGateway, SIGNAL(gatewayFound(const QString &)), this, SLOT(gatewayFound(const QString &)));
+	connect (&mGateway, SIGNAL(gatewayLost()), this, SLOT(gatewayLost()));
 	connect (&mGateway, SIGNAL(sensorFound(Sensor * const)), this, SLOT(sensorFound(Sensor * const)));
 	connect (&mGateway, SIGNAL(sensorUpdated(Sensor * const)), this, SLOT(sensorUpdated(Sensor * const)));
 
@@ -44,10 +57,32 @@ Qwacs::Qwacs(QObject *parent) :
 	mManager.connect (&mGateway, SIGNAL(gatewayFound(const QString &)), SIGNAL(gatewayFound(const QString &)));
 	mManager.connect (&mGateway, SIGNAL(sensorFound(const QString &)), SIGNAL(sensorAdded(const QString &)));
 
+}
+
+Qwacs::~Qwacs()
+{
+	QMap<Connections, PVinverter *>::const_iterator i = mPVinverterMap.constBegin();
+	while (i != mPVinverterMap.constEnd()) {
+		delete i.value();
+		++i;
+	}
+}
+
+void Qwacs::waitForLocalSettings()
+{
 	// MMU: testing code
 	//if (mAddSetting.add("Sensors/OnPosition/ACIn1", "L1", "00.00.00.00.00", "s", 0, 0))
 	//	qDebug() << "ERROR: addSetting";
 	//addSetting.add("System/Sensors", "Test2", 10, "i", 3, 20);
+
+	std::cerr << "Wait for local setting on DBus... ";
+	BusItemCons settings("com.victronenergy.settings", "/Settings", DBUS_CONNECTION, 0);
+	QVariant reply = settings.getValue();
+	while (reply.isValid() == false) {
+		reply = settings.getValue();
+		usleep(500000);
+	}
+	std::cerr << "Found!" << std::endl;
 }
 
 void Qwacs::initLogger(QsLogging::Level logLevel)
@@ -71,6 +106,23 @@ void Qwacs::gatewayFound(const QString &hostname)
 	mManager.setHostname(hostname);
 	mDBus.registerObject("/Gateway", &mGateway);
 }
+
+void Qwacs::gatewayLost()
+{
+	mGateway.setConnected(false);
+	mManager.setGatewayConnected(false);
+	updatePVinverterConnection(false);
+}
+
+void Qwacs::updatePVinverterConnection(bool connected)
+{
+	QMap<Connections, PVinverter *>::const_iterator i = mPVinverterMap.constBegin();
+	while (i != mPVinverterMap.constEnd()) {
+		i.value()->setConnected(connected);
+		++i;
+	}
+}
+
 
 void Qwacs::sensorFound(Sensor * const sens)
 {
@@ -101,7 +153,7 @@ void Qwacs::addSensorToPVinverter(const QString &id)
 	if (conn != NoConn ) {
 		if (!mPVinverterMap.contains(conn)) {
 			mPVinverterMap.insert(conn, new PVinverter("com.victronenergy.pvinverter.qwacs_di"+QString::number(mDBusInstance++)));
-			mPVinverterMap[conn]->registerConnection(conn);
+			mPVinverterMap[conn]->registerConnection(conn, mGateway.getFirmwareVersion());
 		}
 	}
 /*
@@ -171,6 +223,7 @@ void Qwacs::ssdpNewDevice(const QString &usn, const QString &location,
 			QLOG_INFO() << "[Qwacs] New SSDP device found: " << mGateway.getHostname();
 			mGateway.setConnected(true);
 			mManager.setGatewayConnected(true);
+			updatePVinverterConnection(true);
 			mGateway.getVersion();
 			//mSDDPClient.stop();
 		}

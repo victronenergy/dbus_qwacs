@@ -20,7 +20,8 @@ class Qwacs : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Qwacs(QObject *parent = 0);
+	Qwacs(QObject *parent = 0);
+	~Qwacs();
 
 signals:
 
@@ -31,14 +32,16 @@ private slots:
 						const QString &st, const QString &ext,
 						const QString &server, const QString &cacheControl);
 	void gatewayFound(const QString & hostname);
+	void gatewayLost();
 	void sensorFound(Sensor * const sens);
 	void sensorUpdated(Sensor * const sens);
 	void addSensorToPVinverter(const QString &id);
 	void removeSensorFromPVinverter(const QString &id, const Connections conn);
 private:
 
+	void waitForLocalSettings();
 	void initLogger(QsLogging::Level logLevel);
-	void getCheck();
+	void updatePVinverterConnection(bool connected);
 
 	int mDBusInstance;
 	QStringList mArguments;
