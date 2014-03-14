@@ -39,7 +39,6 @@ private slots:
 	void removeSensorFromPVinverter(const QString &id, const Connections conn);
 private:
 
-	void initLogger(QsLogging::Level logLevel);
 	void updatePVinverterConnection(bool connected);
 
 	int mDBusInstance;

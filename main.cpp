@@ -1,9 +1,24 @@
-#include <iostream>
 #include <unistd.h>
 #include <QCoreApplication>
 #include "defines.h"
 #include "busitem_cons.h"
 #include "qwacs.h"
+#include "QsLog.h"
+
+QsLogging::Logger& logger = QsLogging::Logger::instance();
+
+void initLogger(QsLogging::Level logLevel)
+{
+	// init the logging mechanism
+	QsLogging::DestinationPtr debugDestination(
+			QsLogging::DestinationFactory::MakeDebugOutputDestination() );
+	logger.addDestination(debugDestination);
+
+	QLOG_INFO() << cNAME << " " << cVERSION << " started";
+	QLOG_INFO() << "Built with Qt" << QT_VERSION_STR << "running on" << qVersion();
+	QLOG_INFO() << cNAME << " built on" << __DATE__ << "at" << __TIME__;
+	logger.setLoggingLevel(logLevel);
+}
 
 int main(int argc, char *argv[])
 {
@@ -26,21 +41,26 @@ int main(int argc, char *argv[])
 	 * - Check unregister and delete when quiting
 	 */
 
+	initLogger(QsLogging::TraceLevel);
+
 	QDBusConnection dbus = DBUS_CONNECTION;
 	if (!dbus.isConnected()) {
-		std::cerr << "DBus connection failed.";
+		QLOG_ERROR() << "DBus connection failed.";
 		exit(EXIT_FAILURE);
 	}
 
+#if TARGET_ccgx
 	// Wait for local settings to become available on the DBus
-	std::cerr << "Wait for local setting on DBus... ";
-	BusItemCons settings("com.victronenergy.settings", "/Settings/Sensors/OnPosition/ACIn1/L1", DBUS_CONNECTION);
+	QLOG_INFO() << "Wait for local setting on DBus... ";
+	BusItemCons settings("com.victronenergy.settings", "/Settings", DBUS_CONNECTION);
 	QVariant reply = settings.getValue();
 	while (reply.isValid() == false) {
 		reply = settings.getValue();
 		usleep(500000);
+		QLOG_INFO() << "Wait...";
 	}
-	std::cerr << "Found!" << std::endl;
+	QLOG_INFO() << "Local settings found!";
+#endif
 
 	Qwacs qwacs(&app);
 

@@ -19,7 +19,7 @@ Qwacs::Qwacs(QObject *parent) :
 	mDBusInstance = 0;
 
 	QVariant reply = mLogLevel.getValue();
-	initLogger(reply.isValid() ? (QsLogging::Level)reply.toInt() : QsLogging::TraceLevel);
+	mLogger.setLoggingLevel(reply.isValid() ? (QsLogging::Level)reply.toInt() : QsLogging::TraceLevel);
 
 	mSDDPClient.start();
 
@@ -55,21 +55,6 @@ Qwacs::~Qwacs()
 		delete i.value();
 		++i;
 	}
-}
-
-void Qwacs::initLogger(QsLogging::Level logLevel)
-{
-	// init the logging mechanism
-	QsLogging::DestinationPtr debugDestination(
-			QsLogging::DestinationFactory::MakeDebugOutputDestination() );
-	mLogger.addDestination(debugDestination);
-
-	// Log header
-	QLOG_INFO() << cNAME << " " << cVERSION << " started";
-	QLOG_INFO() << "Built with Qt" << QT_VERSION_STR << "running on" << qVersion();
-	QLOG_INFO() << cNAME << " built on" << __DATE__ << "at" << __TIME__;
-	// Change if necessary
-	mLogger.setLoggingLevel(logLevel);
 }
 
 void Qwacs::gatewayFound(const QString &hostname)
