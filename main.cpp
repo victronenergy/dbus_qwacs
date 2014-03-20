@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	QVariant reply = settings.getValue();
 	while (reply.isValid() == false) {
 		reply = settings.getValue();
-		usleep(500000);
+		usleep(2000000);
 		QLOG_INFO() << "Wait...";
 	}
 	QLOG_INFO() << "Local settings found!";
