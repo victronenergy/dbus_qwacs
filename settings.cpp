@@ -29,10 +29,10 @@ void Settings::createBusItem(const Positions pos)
 
 	connect(busitem, SIGNAL(valueChanged(BusItemCons * const )), this, SLOT(valueChanged(BusItemCons * const)));
 
+	mBusitemPositionMap.insert(busitem, pos);
 	mPositionsTakenMap.insert(pos, false);
 	QVariant reply = busitem->getValue();
 	if (reply.isValid()) {
-		mBusitemPositionMap.insert(busitem, pos);
 		QString replyString = reply.toString();
 		QStringList sensors = replyString.split(",");
 		for (int i = 0; i < sensors.size(); i++ ) {
