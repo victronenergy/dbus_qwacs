@@ -328,7 +328,7 @@ void PVinverter::setCurrent(const Phases phase, const double value)
 	for (int i = 0; i < listSize; ++i)
 		sum += mCurrent.at(i);
 	mBusItemMap[Current]->setValue(sum);
-	text = QString::number(sum,'f',1)+" A";
+	text = QString::number(sum,'f',1)+"A";
 	mBusItemMap[Current]->setText(text);
 	mBusItemMap[Current]->propertiesUpdated();
 }
@@ -367,7 +367,7 @@ void PVinverter::setPower(const Phases phase, const int value)
 	for (int i = 0; i < listSize; ++i)
 		sum += mPower.at(i);
 	mBusItemMap[Power]->setValue(sum);
-	text = QString::number(sum,'f',0)+" W";
+	text = QString::number(sum,'f',0)+"W";
 	mBusItemMap[Power]->setText(text);
 	mBusItemMap[Power]->propertiesUpdated();
 }
@@ -406,7 +406,7 @@ void PVinverter::setEnergyForward(const Phases phase, const uint value)
 	for (int i = 0; i < listSize; ++i)
 		sum += mEnergyForward.at(i);
 	mBusItemMap[EnergyForward]->setValue(sum);
-	text = QString::number(sum,'f',0)+" Wh";
+	text = QString::number(sum,'f',0)+"Wh";
 	mBusItemMap[EnergyForward]->setText(text);
 	mBusItemMap[EnergyForward]->propertiesUpdated();
 }
@@ -445,7 +445,7 @@ void PVinverter::setEnergyReverse(const Phases phase, const uint value)
 	for (int i = 0; i < listSize; ++i)
 		sum += mEnergyReverse.at(i);
 	mBusItemMap[EnergyReverse]->setValue(sum);
-	text = QString::number(sum,'f',0)+" Wh";
+	text = QString::number(sum,'f',0)+"Wh";
 	mBusItemMap[EnergyReverse]->setText(text);
 	mBusItemMap[EnergyReverse]->propertiesUpdated();
 }
