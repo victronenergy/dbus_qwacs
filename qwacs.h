@@ -13,7 +13,6 @@
 
 #include "json/json.h"
 
-
 #include "addsetting.h"
 
 class Qwacs : public QObject
@@ -41,7 +40,6 @@ private:
 
 	void updatePVinverterConnection(bool connected);
 
-	int mDBusInstance;
 	QStringList mArguments;
 	BusItemCons mLogLevel;
 	QsLogging::Logger& mLogger;
@@ -52,7 +50,6 @@ private:
 	Gateway mGateway;
 	QMap<Connections, PVinverter *> mPVinverterMap;
 	QStringList mSensorIdList;
-	//AddSetting mAddSetting;
 	JSON &json;
 };
 

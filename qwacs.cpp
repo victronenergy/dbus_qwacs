@@ -13,11 +13,8 @@ Qwacs::Qwacs(QObject *parent) :
 	mSettings(this),
 	mManager(this),
 	mGateway(this),
-	//mAddSetting("com.victronenergy.settings", "/Settings", DBUS_CONNECTION, parent),
 	json(JSON::instance())
 {
-	mDBusInstance = 0;
-
 	QVariant reply = mLogLevel.getValue();
 	mLogger.setLoggingLevel(reply.isValid() ? (QsLogging::Level)reply.toInt() : QsLogging::TraceLevel);
 
@@ -45,7 +42,6 @@ Qwacs::Qwacs(QObject *parent) :
 	// Relaying signals to DBus
 	mManager.connect (&mGateway, SIGNAL(gatewayFound(const QString &)), SIGNAL(gatewayFound(const QString &)));
 	mManager.connect (&mGateway, SIGNAL(sensorFound(const QString &)), SIGNAL(sensorAdded(const QString &)));
-
 }
 
 Qwacs::~Qwacs()
@@ -100,7 +96,7 @@ void Qwacs::addSensorToPVinverter(const QString &id)
 	if (conn != NoConn ) {
 		QLOG_INFO()  << "[Qwacs] Add sensor to pv-inverter: " << id;
 		if (!mPVinverterMap.contains(conn)) {
-			mPVinverterMap.insert(conn, new PVinverter("com.victronenergy.pvinverter.qwacs_di"+QString::number(mDBusInstance++)));
+			mPVinverterMap.insert(conn, new PVinverter("com.victronenergy.pvinverter.qwacs_di"+QString::number(conn)));
 			mPVinverterMap[conn]->registerConnection(conn, mGateway.getFirmwareVersion());
 		}
 	}
