@@ -29,17 +29,10 @@ int main(int argc, char *argv[])
 	 *
 	 *This program tries to find the TIM gateway from Quby makeing use of Upnp.
 	 *After this it will fetch the information from all sensors and publish it
-	 *on the dbus under com.victronenergy.quby.sensors
+	 *on the dbus
 	 *
 	 *UPNP code: https://garage.maemo.org/frs/download.php/8365/libbrisa_0.1.1.tar.gz
 	*/
-
-	/*
-	 * TODO:
-	 *
-	 * - Sensorsets for sum sensors on same position
-	 * - Check unregister and delete when quiting
-	 */
 
 	initLogger(QsLogging::TraceLevel);
 
