@@ -3,7 +3,7 @@
 
 Sensor::Sensor(QObject *parent) :
 	QObject(parent),
-	mAdaptor()
+	mAdaptor(0)
 {
 	mConnected = false;
 	mVrms = 0.0;
@@ -14,4 +14,9 @@ Sensor::Sensor(QObject *parent) :
 
 	mAdaptor = new SensorAdaptor(this);
 	mAdaptor->connect(this, SIGNAL(propertiesChanged()), SIGNAL(PropertiesChanged()));
+}
+
+Sensor::~Sensor()
+{
+	delete mAdaptor;
 }

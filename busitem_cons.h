@@ -9,6 +9,7 @@ class BusItemCons : public QObject
 
 public:
 	BusItemCons(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);
+	~BusItemCons();
 
 	QVariant getValue();
 

@@ -21,6 +21,15 @@ Settings::Settings(QObject *parent) :
 	createBusItem(ACOut_L3);
 }
 
+Settings::~Settings()
+{
+	QMap<BusItemCons *, Positions>::const_iterator i = mBusitemPositionMap.constBegin();
+	while (i != mBusitemPositionMap.constEnd()) {
+		delete i.key();
+		++i;
+	}
+}
+
 void Settings::createBusItem(const Positions pos)
 {
 	const QString objPath= path_prefix+getObjectPath(pos);

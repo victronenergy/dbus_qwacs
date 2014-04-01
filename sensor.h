@@ -11,6 +11,7 @@ class Sensor : public QObject
 
 public:
 	Sensor(QObject *parent = 0);
+	~Sensor();
 
 	void setID(const QString &id) { mID = id; }
 	void setType(QString type) { mType = type; }

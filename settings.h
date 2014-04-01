@@ -10,6 +10,7 @@ class Settings : public QObject
 	Q_OBJECT
 public:
 	Settings(QObject *parent = 0);
+	~Settings();
 
 	Positions getPosition(const QString &id);
 	Connections getConnection(const QString &id);

@@ -12,6 +12,11 @@ BusItemProd::BusItemProd(QObject *parent) :
 	mBusItem->connect(this, SIGNAL(PropertiesChanged(const QVariantMap &)), SIGNAL(PropertiesChanged(const QVariantMap &)));
 }
 
+BusItemProd::~BusItemProd()
+{
+	delete mBusItem;
+}
+
 BusItemProd::BusItemProd(const QVariant &value, QObject *parent) :
 	QObject(parent),
 	mBusItem(0)

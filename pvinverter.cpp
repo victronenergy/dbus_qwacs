@@ -55,6 +55,15 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 	}
 }
 
+PVinverter::~PVinverter()
+{
+	QMap<Items, BusItemProd *>::const_iterator i = mBusItemMap.constBegin();
+	while (i != mBusItemMap.constEnd()) {
+		delete i.value();
+		++i;
+	}
+}
+
 void PVinverter::registerConnection(const Connections pos, const QString version)
 {
 	switch (pos)

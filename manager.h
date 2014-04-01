@@ -11,6 +11,7 @@ class Manager : public QObject
 
 public:
 	Manager(QObject * parent = 0);
+	~Manager();
 
 	void setGatewayConnected(bool connected) { mGatewayConnected = connected; }
 	void setHostname(const QString & hostname) { mHostname = hostname; }

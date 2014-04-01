@@ -3,7 +3,7 @@
 
 Gateway::Gateway(QObject *parent) :
 	QObject(parent),
-	mAdaptor()
+	mAdaptor(0)
 {
 	mUpdays = 0;
 	mUphours = 0;
@@ -14,6 +14,16 @@ Gateway::Gateway(QObject *parent) :
 	connect (&mHTTPConnection, SIGNAL(result(QString)), this, SLOT(httpResult(QString)));
 	connect(&mBlinkTimer, SIGNAL(timeout()), this, SLOT(blinkTimer()));
 	connect(&mSensTimer, SIGNAL(timeout()), this, SLOT(sensTimer()));
+}
+
+Gateway::~Gateway()
+{
+	delete mAdaptor;
+	QMap<QString, Sensor *>::const_iterator i = mSensorMap.constBegin();
+	while (i != mSensorMap.constEnd()) {
+		delete i.value();
+		++i;
+	}
 }
 
 void Gateway::gateway(const QString &name, const QString &version)

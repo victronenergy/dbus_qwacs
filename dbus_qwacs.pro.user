@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 2.7.1, 2014-02-25T15:00:49. -->
+<!-- Written by QtCreator 2.7.1, 2014-04-01T08:53:09. -->
 <qtcreator>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -393,18 +393,23 @@
       <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinux.DirectUploadStep</value>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedFiles">
        <value type="QString">/home/marcel/projects/build-dbus_qwacs-CCGX-Debug/dbus_qwacs</value>
+       <value type="QString">/home/marcel/projects/build-dbus_qwacs-CCGX-Debug/dbus_qwacs</value>
       </valuelist>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedHosts">
+       <value type="QString">192.168.4.104</value>
        <value type="QString">192.168.4.104</value>
       </valuelist>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedRemotePaths">
        <value type="QString">/opt/qwacs</value>
+       <value type="QString">/opt/qwacs</value>
       </valuelist>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedSysroots">
+       <value type="QString">/opt/bpp3/current/sysroots/armv7a-vfp-neon-bpp3-linux-gnueabi</value>
        <value type="QString">/opt/bpp3/v1.12/sysroots/armv7a-vfp-neon-bpp3-linux-gnueabi</value>
       </valuelist>
       <valuelist type="QVariantList" key="Qt4ProjectManager.MaemoRunConfiguration.LastDeployedTimes">
-       <value type="QDateTime">2014-02-25T14:58:10</value>
+       <value type="QDateTime">2014-04-01T08:50:22</value>
+       <value type="QDateTime">2014-03-05T16:54:58</value>
       </valuelist>
       <value type="bool" key="RemoteLinux.GenericDirectUploadStep.Incremental">false</value>
      </valuemap>

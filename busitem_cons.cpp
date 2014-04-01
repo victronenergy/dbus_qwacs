@@ -11,6 +11,11 @@ BusItemCons::BusItemCons(const QString &service, const QString &path, const QDBu
 	connect(mBusItem, SIGNAL(PropertiesChanged(const QVariantMap &)), this, SLOT(PropertiesChanged(const QVariantMap &)));
 }
 
+BusItemCons::~BusItemCons()
+{
+	delete mBusItem;
+}
+
 QVariant BusItemCons::getValue()
 {
 	if (!mValueValid)

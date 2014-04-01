@@ -10,3 +10,8 @@ Manager::Manager(QObject *parent) :
 	mAdaptor = new ManagerAdaptor(this);
 	connect (this, SIGNAL(sensorAdded(const QString &)), this, SLOT(addSensor(const QString &)));
 }
+
+Manager::~Manager()
+{
+	delete mAdaptor;
+}

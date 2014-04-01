@@ -11,6 +11,7 @@ class PVinverter : public QObject
 	Q_OBJECT
 public:
 	PVinverter(const QString &service, QObject *parent = 0);
+	~PVinverter();
 
 	void registerConnection(const Connections conn, const QString version);
 	void registerPhase(const Phases phase);

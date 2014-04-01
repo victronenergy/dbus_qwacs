@@ -12,6 +12,7 @@ public:
 	BusItemProd(QObject *parent = 0);
 	BusItemProd(const QVariant &value, QObject *parent = 0);
 	BusItemProd(const QString &value, QObject *parent = 0);
+	~BusItemProd();
 
 	void setValue(const QVariant &value);
 	void setText(const QString &text);

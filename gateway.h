@@ -16,6 +16,7 @@ class Gateway : public QObject
 
 public:
 	Gateway(QObject *parent = 0);
+	~Gateway();
 
 	bool getConnected() { return mConnected; }
 	void setConnected(bool connected) { mConnected = connected; }
