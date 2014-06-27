@@ -1,8 +1,21 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2014-01-06T13:29:51
-#
-#-------------------------------------------------
+# dbus_qwacs version and revision
+VERSION = 1.0.0
+REVISION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --dirty --tags)
+
+# Create a include file with VERION / REVISION
+version_rule.target = $$OUT_PWD/version.h
+version_rule.commands = @echo \"updating file $$revtarget.target\"; \
+	echo -e \"/* generated file (do not edit) */\\n\" \
+	\"$${LITERAL_HASH}ifndef VERSION_H\\n\" \
+	\"$${LITERAL_HASH}define VERSION_H\\n\" \
+	\"$${LITERAL_HASH}define VERSION \\\"$${VERSION}\\\"\\n\" \
+	\"$${LITERAL_HASH}define REVISION \\\"$${REVISION}\\\"\\n\" \
+	\"$${LITERAL_HASH}endif\" > $$version_rule.target
+version_rule.depends = FORCE
+QMAKE_DISTCLEAN += $$version_rule.target
+
+QMAKE_EXTRA_TARGETS += version_rule
+PRE_TARGETDEPS += $$OUT_PWD/version.h
 
 # Add more folders to ship with the application, here
 target.path = /opt/qwacs
@@ -10,7 +23,6 @@ INSTALLS += target
 
 machine=$$(MACHINE)
 contains(machine,ccgx) {
-	message($$(MACHINE))
 	DEFINES += TARGET_ccgx
 }
 
@@ -62,7 +74,6 @@ HEADERS += \
 	gateway_adaptor.h \
 	addsetting.h \
 	busitem_adaptor.h \
-	version.h \
 	busitem_interface.h \
 	busitem_prod.h \
 	busitem_cons.h \

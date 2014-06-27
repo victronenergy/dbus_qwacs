@@ -4,6 +4,7 @@
 #include "busitem_cons.h"
 #include "qwacs.h"
 #include "QsLog.h"
+#include "version.h"
 
 QsLogging::Logger& logger = QsLogging::Logger::instance();
 
@@ -14,9 +15,9 @@ void initLogger(QsLogging::Level logLevel)
 			QsLogging::DestinationFactory::MakeDebugOutputDestination() );
 	logger.addDestination(debugDestination);
 
-	QLOG_INFO() << cNAME << " " << cVERSION << " started";
+	QLOG_INFO() << "dbus_modbustcp" << "v"VERSION << "started" << "("REVISION")";
 	QLOG_INFO() << "Built with Qt" << QT_VERSION_STR << "running on" << qVersion();
-	QLOG_INFO() << cNAME << " built on" << __DATE__ << "at" << __TIME__;
+	QLOG_INFO() << "Built on" << __DATE__ << "at" << __TIME__;
 	logger.setLoggingLevel(logLevel);
 }
 
@@ -35,14 +36,14 @@ int main(int argc, char *argv[])
 	*/
 
 	initLogger(QsLogging::TraceLevel);
-
+/*
 	QDBusConnection dbus = DBUS_CONNECTION;
 	if (!dbus.isConnected()) {
 		QLOG_ERROR() << "DBus connection failed.";
 		exit(EXIT_FAILURE);
 	}
-
-#if TARGET_ccgx
+*/
+#if TARGET_ccgxTT
 	// Wait for local settings to become available on the DBus
 	QLOG_INFO() << "Wait for local setting on DBus... ";
 	BusItemCons settings("com.victronenergy.settings", "/Settings", DBUS_CONNECTION);
