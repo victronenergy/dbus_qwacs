@@ -15,7 +15,7 @@ void initLogger(QsLogging::Level logLevel)
 			QsLogging::DestinationFactory::MakeDebugOutputDestination() );
 	logger.addDestination(debugDestination);
 
-	QLOG_INFO() << "dbus_modbustcp" << "v"VERSION << "started" << "("REVISION")";
+	QLOG_INFO() << "dbus_qwacs" << "v"VERSION << "started" << "("REVISION")";
 	QLOG_INFO() << "Built with Qt" << QT_VERSION_STR << "running on" << qVersion();
 	QLOG_INFO() << "Built on" << __DATE__ << "at" << __TIME__;
 	logger.setLoggingLevel(logLevel);
@@ -35,15 +35,15 @@ int main(int argc, char *argv[])
 	 *UPNP code: https://garage.maemo.org/frs/download.php/8365/libbrisa_0.1.1.tar.gz
 	*/
 
-	initLogger(QsLogging::TraceLevel);
-/*
+	initLogger(QsLogging::InfoLevel);
+
 	QDBusConnection dbus = DBUS_CONNECTION;
 	if (!dbus.isConnected()) {
 		QLOG_ERROR() << "DBus connection failed.";
 		exit(EXIT_FAILURE);
 	}
-*/
-#if TARGET_ccgxTT
+
+#if TARGET_ccgx
 	// Wait for local settings to become available on the DBus
 	QLOG_INFO() << "Wait for local setting on DBus... ";
 	BusItemCons settings("com.victronenergy.settings", "/Settings", DBUS_CONNECTION);
