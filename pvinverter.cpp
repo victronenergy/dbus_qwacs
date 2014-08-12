@@ -55,10 +55,10 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 
 	for (int i = 0; i < L3; i++) {
 		//mVoltage.append(0);
-		mCurrent.append(0);
-		mPower.append(0);
-		mEnergyForward.append(0);
-		mEnergyReverse.append(0);
+		mCurrent.append(0.0d);
+		mPower.append(0.0d);
+		mEnergyForward.append(0.0d);
+		mEnergyReverse.append(0.0d);
 	}
 }
 
@@ -250,6 +250,12 @@ void PVinverter::invalidatePhase(const Phases phase)
 	default:
 		return;
 	}
+	/* Remove from total calculations */
+	const int index = phase-1;
+	mCurrent[index] = 0;
+	mPower[index] = 0;
+	mEnergyForward[index] = 0;
+	mEnergyReverse[index] = 0;
 }
 
 void PVinverter::invalidateTotals()
@@ -395,34 +401,36 @@ void PVinverter::setEnergyForward(const Phases phase, const uint value)
 		return;
 	}
 
-	QString text(QString::number(value,'f',0)+"Wh");
-	mEnergyForward[phase-1] = value;
+	/* Convert to kWh */
+	double kwhValue = value/1000.0;
+	QString text(QString::number(kwhValue,'f',2)+"kWh");
+	mEnergyForward[phase-1] = kwhValue;
 	switch (phase)
 	{
 	case L1:
-		mBusItemMap[L1_EnergyForward]->setValue(value);
+		mBusItemMap[L1_EnergyForward]->setValue(kwhValue);
 		mBusItemMap[L1_EnergyForward]->setText(text);
 		mBusItemMap[L1_EnergyForward]->propertiesUpdated();
 		break;
 	case L2:
-		mBusItemMap[L2_EnergyForward]->setValue(value);
+		mBusItemMap[L2_EnergyForward]->setValue(kwhValue);
 		mBusItemMap[L2_EnergyForward]->setText(text);
 		mBusItemMap[L2_EnergyForward]->propertiesUpdated();
 		break;
 	case L3:
-		mBusItemMap[L3_EnergyForward]->setValue(value);
+		mBusItemMap[L3_EnergyForward]->setValue(kwhValue);
 		mBusItemMap[L3_EnergyForward]->setText(text);
 		mBusItemMap[L3_EnergyForward]->propertiesUpdated();
 		break;
 	default:
 		return;
 	}
-	uint sum = 0;
+	double sum = 0.0d;
 	const int listSize = mEnergyForward.size();
 	for (int i = 0; i < listSize; ++i)
 		sum += mEnergyForward.at(i);
 	mBusItemMap[EnergyForward]->setValue(sum);
-	text = QString::number(sum,'f',0)+"Wh";
+	text = QString::number(sum,'f',2)+"kWh";
 	mBusItemMap[EnergyForward]->setText(text);
 	mBusItemMap[EnergyForward]->propertiesUpdated();
 }
@@ -434,34 +442,36 @@ void PVinverter::setEnergyReverse(const Phases phase, const uint value)
 		return;
 	}
 
-	QString text(QString::number(value,'f',0)+"Wh");
-	mEnergyReverse[phase-1] = value;
+	/* Convert to kWh */
+	double kwhValue = value/1000.0;
+	QString text(QString::number(kwhValue,'f',2)+"kWh");
+	mEnergyReverse[phase-1] = kwhValue;
 	switch (phase)
 	{
 	case L1:
-		mBusItemMap[L1_EnergyReverse]->setValue(value);
+		mBusItemMap[L1_EnergyReverse]->setValue(kwhValue);
 		mBusItemMap[L1_EnergyReverse]->setText(text);
 		mBusItemMap[L1_EnergyReverse]->propertiesUpdated();
 		break;
 	case L2:
-		mBusItemMap[L2_EnergyReverse]->setValue(value);
+		mBusItemMap[L2_EnergyReverse]->setValue(kwhValue);
 		mBusItemMap[L2_EnergyReverse]->setText(text);
 		mBusItemMap[L2_EnergyReverse]->propertiesUpdated();
 		break;
 	case L3:
-		mBusItemMap[L3_EnergyReverse]->setValue(value);
+		mBusItemMap[L3_EnergyReverse]->setValue(kwhValue);
 		mBusItemMap[L3_EnergyReverse]->setText(text);
 		mBusItemMap[L3_EnergyReverse]->propertiesUpdated();
 		break;
 	default:
 		return;
 	}
-	uint sum = 0;
+	double sum = 0.0d;
 	const int listSize = mEnergyReverse.size();
 	for (int i = 0; i < listSize; ++i)
 		sum += mEnergyReverse.at(i);
 	mBusItemMap[EnergyReverse]->setValue(sum);
-	text = QString::number(sum,'f',0)+"Wh";
+	text = QString::number(sum,'f',2)+"kWh";
 	mBusItemMap[EnergyReverse]->setText(text);
 	mBusItemMap[EnergyReverse]->propertiesUpdated();
 }

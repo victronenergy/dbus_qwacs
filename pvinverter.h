@@ -49,8 +49,8 @@ private:
 	QMap<Items, BusItemProd *> mBusItemMap;
 	QList<double> mCurrent;
 	QList<int> mPower;
-	QList<uint> mEnergyForward;
-	QList<uint> mEnergyReverse;
+	QList<double> mEnergyForward;
+	QList<double> mEnergyReverse;
 };
 
 #endif // PVINVERTER_H
