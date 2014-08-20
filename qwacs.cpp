@@ -3,23 +3,18 @@
 #include "qwacs.h"
 #include "defines.h"
 #include "types.h"
+#include "QsLog.h"
 
-Qwacs::Qwacs(QObject *parent) :
+Qwacs::Qwacs(QObject *parent, const QString &gatewayAddress) :
 	QObject(parent),
+	mGatewayAddress(gatewayAddress),
 	mArguments(QCoreApplication::arguments ()),
-	mLogLevel("com.victronenergy.settings", "/Settings/System/LogLevel", DBUS_CONNECTION, parent),
-	mLogger(QsLogging::Logger::instance()),
 	mDBus(DBUS_CONNECTION),
 	mSettings(this),
 	mManager(this),
 	mGateway(this),
 	json(JSON::instance())
 {
-	QVariant reply = mLogLevel.getValue();
-	mLogger.setLoggingLevel(reply.isValid() ? (QsLogging::Level)reply.toInt() : QsLogging::TraceLevel);
-
-	mSDDPClient.start();
-
 	connect (&mSDDPClient, SIGNAL(newDeviceEvent(const QString &, const QString &,
 												const QString &, const QString &,
 												const QString &, const QString &)),
@@ -42,6 +37,11 @@ Qwacs::Qwacs(QObject *parent) :
 	// Relaying signals to DBus
 	mManager.connect (&mGateway, SIGNAL(gatewayFound(const QString &)), SIGNAL(gatewayFound(const QString &)));
 	mManager.connect (&mGateway, SIGNAL(sensorFound(const QString &)), SIGNAL(sensorAdded(const QString &)));
+
+	if (gatewayAddress.isEmpty()) {
+		mSDDPClient.start();
+	} else
+		connectGaterway("http://"+gatewayAddress);
 }
 
 Qwacs::~Qwacs()
@@ -80,7 +80,6 @@ void Qwacs::updatePVinverterConnection(bool connected)
 void Qwacs::sensorFound(Sensor * const sens)
 {
 	QString id = sens->getID();
-	//Connections conn = mSettings.getConnection(id);
 
 	QLOG_INFO()  << "[Qwacs] Sensor found: " << id;
 	mSensorIdList.append(id);
@@ -108,11 +107,12 @@ void Qwacs::removeSensorFromPVinverter(const QString &id, const Connections conn
 		QLOG_INFO()  << "[Qwacs] Remove sensor from pv-inverter: " << id << " conn: " << conn;
 		if (conn != NoConn ) {
 			if (mPVinverterMap.contains(conn)) {
-				//mPVinverterMap[conn]->setNumberOfPhases(mSettings.getNumberOfPhases(conn));
 				Phases phase = mSettings.getPhase(id);
 				if (phase != NoPhase) {
-					//mPVinverterMap[conn]->unregisterPhase(phase);
 					mPVinverterMap[conn]->invalidatePhase(phase);
+					if (mSettings.getNumberOfPhases(conn) == 0) {
+						mPVinverterMap[conn]->invalidateTotals();
+					}
 				} else
 					QLOG_WARN()  << "[Qwacs::removeSensorFromPVinverter()] No phase found for sensor with id: " << id;
 			} else
@@ -149,17 +149,23 @@ void Qwacs::ssdpNewDevice(const QString &usn, const QString &location,
 	Q_UNUSED(ext);
 	Q_UNUSED(server);
 	Q_UNUSED(cacheControl);
-	//QLOG_INFO() << "SSDP Device: " << usn << ", " << location << ", " << st << ", " << ext << ", " << server;
-	if (usn.contains("urn:schemas-quby-nl:service:DectGateway:1")) {
-		QUrl url(location);
-		mGateway.setHostname(url.encodedHost());
-		if (!mGateway.getConnected()) {
-			QLOG_INFO() << "[Qwacs] New SSDP device found: " << mGateway.getHostname();
-			mGateway.setConnected(true);
-			mManager.setGatewayConnected(true);
-			updatePVinverterConnection(true);
-			mGateway.getVersion();
-			//mSDDPClient.stop();
+	if (!mGateway.getConnected()) {
+		QLOG_INFO() << "SSDP Device: " << usn << ", " << location << ", " << st << ", " << ext << ", " << server;
+		if (usn.contains("urn:schemas-quby-nl:service:DectGateway:1")) {
+			connectGaterway(location);
 		}
 	}
+}
+
+void Qwacs::connectGaterway(const QString &gatewayAddress)
+{
+	QLOG_INFO() << "[Qwacs] Connect gateway" << gatewayAddress;
+	QUrl url(gatewayAddress);
+	mGateway.setHostname(url.encodedHost());
+	QLOG_INFO() << "[Qwacs] New SSDP device found: " << mGateway.getHostname();
+	mGateway.setConnected(true);
+	mManager.setGatewayConnected(true);
+	updatePVinverterConnection(true);
+	mGateway.getVersion();
+	//mSDDPClient.stop();
 }

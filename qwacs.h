@@ -9,17 +9,14 @@
 #include "busitem_cons.h"
 #include "pvinverter.h"
 #include "settings.h"
-#include "QsLog.h"
-
 #include "json/json.h"
-
-#include "addsetting.h"
 
 class Qwacs : public QObject
 {
 	Q_OBJECT
+
 public:
-	Qwacs(QObject *parent = 0);
+	Qwacs(QObject *parent = 0, const QString &gatewayAddress = QString());
 	~Qwacs();
 
 signals:
@@ -36,13 +33,13 @@ private slots:
 	void sensorUpdated(Sensor * const sens);
 	void addSensorToPVinverter(const QString &id);
 	void removeSensorFromPVinverter(const QString &id, const Connections conn);
+
 private:
-
 	void updatePVinverterConnection(bool connected);
+	void connectGaterway(const QString &gatewayAddress);
 
+	QString mGatewayAddress;
 	QStringList mArguments;
-	BusItemCons mLogLevel;
-	QsLogging::Logger& mLogger;
 	BrisaUpnp::BrisaSSDPClient mSDDPClient;
 	QDBusConnection mDBus;
 	Settings mSettings;

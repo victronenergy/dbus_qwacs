@@ -54,7 +54,6 @@ SOURCES += main.cpp \
 	manager_adaptor.cpp \
 	gateway.cpp \
 	gateway_adaptor.cpp \
-	addsetting.cpp \
 	busitem_adaptor.cpp \
 	busitem_interface.cpp \
 	busitem_prod.cpp \
@@ -62,6 +61,7 @@ SOURCES += main.cpp \
 	pvinverter.cpp \
 	settings.cpp \
 	sensorset.cpp \
+	arguments.cpp
 
 HEADERS += \
 	httprequest.h \
@@ -72,7 +72,6 @@ HEADERS += \
 	manager_adaptor.h \
 	gateway.h \
 	gateway_adaptor.h \
-	addsetting.h \
 	busitem_adaptor.h \
 	busitem_interface.h \
 	busitem_prod.h \
@@ -82,6 +81,7 @@ HEADERS += \
 	settings.h \
 	types.h \
 	sensorset.h \
+	arguments.h
 
 # suppress the mangling of va_arg has changed for gcc 4.4
 QMAKE_CXXFLAGS += -Wno-psabi

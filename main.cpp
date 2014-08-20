@@ -5,6 +5,7 @@
 #include "qwacs.h"
 #include "QsLog.h"
 #include "version.h"
+#include "arguments.h"
 
 QsLogging::Logger& logger = QsLogging::Logger::instance();
 
@@ -21,10 +22,15 @@ void initLogger(QsLogging::Level logLevel)
 	logger.setLoggingLevel(logLevel);
 }
 
+void usage(Arguments & arg)
+{
+	arg.addArg("-h", "Print this help");
+	arg.addArg("-d level", "Debug level: 0=TRACE, 1=DEBUG, 2=INFO...");
+	arg.addArg("-g ip address", "IP address of gateway");
+}
+
 int main(int argc, char *argv[])
 {
-	QCoreApplication app(argc, argv);
-
 	/*
 	 * Description:
 	 *
@@ -35,7 +41,18 @@ int main(int argc, char *argv[])
 	 *UPNP code: https://garage.maemo.org/frs/download.php/8365/libbrisa_0.1.1.tar.gz
 	*/
 
-	initLogger(QsLogging::InfoLevel);
+	QCoreApplication app(argc, argv);
+	Arguments arg;
+
+	usage(arg);
+	if (arg.contains("h")) {
+		arg.help();
+		exit(0);
+	}
+
+	initLogger(QsLogging::TraceLevel);
+	if (arg.contains("d"))
+		logger.setLoggingLevel((QsLogging::Level)arg.value("d").toInt());
 
 	QDBusConnection dbus = DBUS_CONNECTION;
 	if (!dbus.isConnected()) {
@@ -43,20 +60,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-#if TARGET_ccgx
-	// Wait for local settings to become available on the DBus
-	QLOG_INFO() << "Wait for local setting on DBus... ";
-	BusItemCons settings("com.victronenergy.settings", "/Settings", DBUS_CONNECTION);
-	QVariant reply = settings.getValue();
-	while (reply.isValid() == false) {
-		reply = settings.getValue();
-		usleep(2000000);
-		QLOG_INFO() << "Wait...";
-	}
-	QLOG_INFO() << "Local settings found!";
-#endif
-
-	Qwacs qwacs(&app);
+	Qwacs qwacs(&app, arg.value("g"));
 
 	return app.exec();
 }
