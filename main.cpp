@@ -60,6 +60,17 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
+	// Wait for local settings to become available on the DBus
+	QLOG_INFO() << "Wait for local settings on DBus... ";
+	BusItemCons settings("com.victronenergy.settings", "/Settings", dbus);
+	QVariant reply = settings.getValue();
+	while (reply.isValid() == false) {
+		reply = settings.getValue();
+		usleep(500000);
+		QLOG_INFO() << "Wait...";
+	}
+	QLOG_INFO() << "Local settings found!";
+
 	Qwacs qwacs(&app, arg.value("g"));
 
 	return app.exec();
