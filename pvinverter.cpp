@@ -52,9 +52,7 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 	mBusItemMap.insert(Connected, new BusItemProd);
 	mBusItemMap.insert(FirmwareVersion, new BusItemProd);
 
-
 	for (int i = 0; i < L3; i++) {
-		//mVoltage.append(0);
 		mCurrent.append(0.0d);
 		mPower.append(0.0d);
 		mEnergyForward.append(0.0d);
