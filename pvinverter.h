@@ -24,7 +24,7 @@ public:
 
 	void setVoltage(const Phases phase, const double value);
 	void setCurrent(const Phases phase, const double value);
-	void setPower(const Phases phase, const int value);
+	void setPower(const Phases phase, int value);
 	void setEnergyForward(const Phases phase, const uint value);
 	void setEnergyReverse(const Phases phase, const uint value);
 	void setNumberOfPhases(const uint value);

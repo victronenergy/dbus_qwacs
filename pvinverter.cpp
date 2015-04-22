@@ -355,15 +355,17 @@ void PVinverter::setCurrent(const Phases phase, const double value)
 	mBusItemMap[Current]->propertiesUpdated();
 }
 
-void PVinverter::setPower(const Phases phase, const int value)
+void PVinverter::setPower(const Phases phase, int value)
 {
 	if (phase == NoPhase) {
 		QLOG_ERROR() << "[PVinverter::setPower] Unknown phase: " << phase;
 		return;
 	}
 
-	QString text(QString::number(value,'f',0)+"W");
+	if (value < 0) // Set power to 0 if negative
+		value = 0;
 	mPower[phase-1] = value;
+	QString text(QString::number(value,'f',0)+"W");
 	switch (phase)
 	{
 	case L1:
