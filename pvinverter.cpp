@@ -150,7 +150,7 @@ void PVinverter::registerPhase(const Phases phase)
 	switch (phase)
 	{
 	case L1:
-		QLOG_INFO()  << "[PVinverter] Register phase L1";
+		QLOG_INFO()  << "[PVinverter] Register phase L1 on DBus";
 		mDBus.registerObject("/Ac/L1/Voltage", mBusItemMap[L1_Voltage]);
 		mDBus.registerObject("/Ac/L1/Current", mBusItemMap[L1_Current]);
 		mDBus.registerObject("/Ac/L1/Power", mBusItemMap[L1_Power]);
@@ -158,7 +158,7 @@ void PVinverter::registerPhase(const Phases phase)
 		mDBus.registerObject("/Ac/L1/Energy/Reverse", mBusItemMap[L1_EnergyReverse]);
 		break;
 	case L2:
-		QLOG_INFO()  << "[PVinverter] Register phase L2";
+		QLOG_INFO()  << "[PVinverter] Register phase L2 on DBus";
 		mDBus.registerObject("/Ac/L2/Voltage", mBusItemMap[L2_Voltage]);
 		mDBus.registerObject("/Ac/L2/Current", mBusItemMap[L2_Current]);
 		mDBus.registerObject("/Ac/L2/Power", mBusItemMap[L2_Power]);
@@ -166,7 +166,7 @@ void PVinverter::registerPhase(const Phases phase)
 		mDBus.registerObject("/Ac/L2/Energy/Reverse", mBusItemMap[L2_EnergyReverse]);
 		break;
 	case L3:
-		QLOG_INFO()  << "[PVinverter] Register phase L3";
+		QLOG_INFO()  << "[PVinverter] Register phase L3 on DBus";
 		mDBus.registerObject("/Ac/L3/Voltage", mBusItemMap[L3_Voltage]);
 		mDBus.registerObject("/Ac/L3/Current", mBusItemMap[L3_Current]);
 		mDBus.registerObject("/Ac/L3/Power", mBusItemMap[L3_Power]);
@@ -191,7 +191,7 @@ void PVinverter::unregisterPhase(const Phases phase)
 		QLOG_ERROR() << "[PVinverter::unregisterPhase] Unknown phase: " << phase;
 		return;
 	} else
-		QLOG_INFO()  << "[PVinverter::unregisterPhase()] phase = " << phase;
+		QLOG_INFO()  << "[PVinverter::unregisterPhase()] phase = " << phase << "from DBus";
 
 	switch (phase)
 	{
