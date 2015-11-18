@@ -43,7 +43,9 @@ void Settings::createBusItem(const Positions pos)
 	QVariant reply = busitem->getValue();
 	if (reply.isValid()) {
 		QString replyString = reply.toString();
-		QStringList sensors = replyString.split(",");
+		QStringList sensors;
+		if (!replyString.isEmpty())
+			sensors = replyString.split(",");
 		for (int i = 0; i < sensors.size(); i++ ) {
 			mBusitemIdMap.insert(busitem, sensors[i]);
 			mIdPositionMap.insert(sensors[i], pos);
@@ -170,9 +172,12 @@ void Settings::valueChanged(BusItemCons * const busitem)
 	QVariant reply = busitem->getValue();
 
 	if (reply.isValid()) {
-		QStringList newSensorList = reply.toString().split(",");
+		QStringList newSensorList;
+		QString sensors = reply.toString();
+		if (!sensors.isEmpty())
+			newSensorList = sensors.split(",");
 
-		if (reply.toString().isEmpty() || reply.toString() == noSensID)
+		if (sensors.isEmpty() || sensors == noSensID)
 			mPositionsTakenMap[pos] = false;
 		else
 			mPositionsTakenMap[pos] = true;
