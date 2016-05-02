@@ -1,6 +1,5 @@
 #include "pvinverter.h"
 #include "defines.h"
-#include "version.h"
 #include "QsLog.h"
 
 const QString productNameText = "PV Inverter";

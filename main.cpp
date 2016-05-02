@@ -4,7 +4,6 @@
 #include "busitem_cons.h"
 #include "qwacs.h"
 #include "QsLog.h"
-#include "version.h"
 #include "arguments.h"
 
 QsLogging::Logger& logger = QsLogging::Logger::instance();
@@ -16,7 +15,7 @@ void initLogger(QsLogging::Level logLevel)
 			QsLogging::DestinationFactory::MakeDebugOutputDestination() );
 	logger.addDestination(debugDestination);
 
-	QLOG_INFO() << "dbus_qwacs" << "v"VERSION << "started" << "("REVISION")";
+	QLOG_INFO() << "dbus_qwacs" << "v" VERSION << "started";
 	QLOG_INFO() << "Built with Qt" << QT_VERSION_STR << "running on" << qVersion();
 	QLOG_INFO() << "Built on" << __DATE__ << "at" << __TIME__;
 	logger.setLoggingLevel(logLevel);

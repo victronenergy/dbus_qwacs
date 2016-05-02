@@ -3,7 +3,6 @@
 
 #include <QDBusAbstractAdaptor>
 #include <QStringList>
-#include "version.h"
 
 class ManagerAdaptor : public QDBusAbstractAdaptor
 {
