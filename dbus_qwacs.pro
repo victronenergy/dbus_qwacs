@@ -1,9 +1,16 @@
-# dbus_qwacs version and revision
+# dbus_qwacs version
 VERSION = 1.0.5
 
-# Add more folders to ship with the application, here
-target.path = /opt/qwacs
-INSTALLS += target
+# Add more folders to ship with the application here
+unix {
+    bindir = $$(bindir)
+    DESTDIR = $$(DESTDIR)
+    isEmpty(bindir) {
+        bindir = /usr/local/bin
+    }
+    INSTALLS += target
+    target.path = $${DESTDIR}$${bindir}
+}
 
 machine=$$(MACHINE)
 contains(machine,ccgx) {
@@ -20,7 +27,7 @@ QT       += network
 QT       += dbus
 QT       += script
 
-TARGET    = dbus_qwacs
+TARGET    = dbus-qwacs
 CONFIG   += console
 CONFIG   -= app_bundle
 
