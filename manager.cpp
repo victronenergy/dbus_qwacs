@@ -1,5 +1,4 @@
 #include "manager.h"
-#include "defines.h"
 #include "QsLog.h"
 
 Manager::Manager(QObject *parent) :

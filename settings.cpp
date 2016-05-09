@@ -1,5 +1,5 @@
+#include <velib/qt/v_busitems.h>
 #include "settings.h"
-#include "defines.h"
 #include "QsLog.h"
 
 const QString service = "com.victronenergy.settings";
@@ -34,7 +34,7 @@ void Settings::createBusItem(const Positions pos)
 {
 	const QString objPath= path_prefix+getObjectPath(pos);
 
-	BusItemCons * busitem = new BusItemCons(service, objPath, DBUS_CONNECTION);
+	BusItemCons * busitem = new BusItemCons(service, objPath, VBusItems::getConnection("settings"));
 
 	connect(busitem, SIGNAL(valueChanged(BusItemCons * const )), this, SLOT(valueChanged(BusItemCons * const)));
 

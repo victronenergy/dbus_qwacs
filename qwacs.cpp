@@ -1,7 +1,6 @@
 #include <QtDBus/QtDBus>
-
+#include <velib/qt/v_busitems.h>
 #include "qwacs.h"
-#include "defines.h"
 #include "types.h"
 #include "QsLog.h"
 
@@ -9,7 +8,7 @@ Qwacs::Qwacs(QObject *parent, const QString &gatewayAddress) :
 	QObject(parent),
 	mGatewayAddress(gatewayAddress),
 	mArguments(QCoreApplication::arguments ()),
-	mDBus(DBUS_CONNECTION),
+	mDBus(VBusItems::getConnection("qwacs")),
 	mSettings(this),
 	mManager(this),
 	mGateway(this),

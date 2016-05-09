@@ -37,7 +37,11 @@ include(ssdp/ssdp.pri)
 include(json/json.pri)
 include(QsLog/QsLog.pri)
 
+INCLUDEPATH += \
+    ext/velib/inc \
+
 SOURCES += main.cpp \
+    ext/velib/src/qt/v_busitems.cpp \
 	httprequest.cpp \
 	sensor.cpp \
 	sensor_adaptor.cpp \
@@ -56,6 +60,7 @@ SOURCES += main.cpp \
 	arguments.cpp
 
 HEADERS += \
+    ext/velib/inc/velib/qt/v_busitems.h \
 	httprequest.h \
 	sensor.h \
 	sensor_adaptor.h \
@@ -68,7 +73,6 @@ HEADERS += \
 	busitem_interface.h \
 	busitem_prod.h \
 	busitem_cons.h \
-	defines.h \
 	pvinverter.h \
 	settings.h \
 	types.h \

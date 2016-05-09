@@ -1,5 +1,5 @@
+#include <velib/qt/v_busitems.h>
 #include "pvinverter.h"
-#include "defines.h"
 #include "QsLog.h"
 
 const QString productNameText = "PV Inverter";
@@ -17,8 +17,8 @@ PVinverter::PVinverter(const QString &service, QObject *parent) :
 
 	//mNumberOfPhases = 0;
 	// This looks a bit odd (with the above init constructor) but I cannot see
-	// another way to get a new connection which is not related to the applciation
-	mDBus = mDBus.connectToBus(DBUS_TYPE, service);
+	// another way to get a new connection which is not related to the appliciation
+	mDBus = VBusItems::getConnection(service);
 	mDBus.registerService(service);
 
 	mBusItemMap.insert(L1_Voltage, new BusItemProd);

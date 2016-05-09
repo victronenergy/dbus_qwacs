@@ -1,6 +1,6 @@
 #include <unistd.h>
 #include <QCoreApplication>
-#include "defines.h"
+#include <velib/qt/v_busitems.h>
 #include "busitem_cons.h"
 #include "qwacs.h"
 #include "QsLog.h"
@@ -26,6 +26,7 @@ void usage(Arguments & arg)
 	arg.addArg("-h", "Print this help");
 	arg.addArg("-d level", "Debug level: 0=TRACE, 1=DEBUG, 2=INFO...");
 	arg.addArg("-g ip address", "IP address of gateway");
+	arg.addArg("--dbus address", "dbus address or 'session' or 'system'");
 }
 
 int main(int argc, char *argv[])
@@ -53,7 +54,12 @@ int main(int argc, char *argv[])
 	if (arg.contains("d"))
 		logger.setLoggingLevel((QsLogging::Level)arg.value("d").toInt());
 
-	QDBusConnection dbus = DBUS_CONNECTION;
+	if (arg.contains("dbus"))
+		VBusItems::setDBusAddress(arg.value("dbus"));
+	else
+		VBusItems::setConnectionType(QDBusConnection::SystemBus);
+
+	QDBusConnection dbus = VBusItems::getConnection("settings");
 	if (!dbus.isConnected()) {
 		QLOG_ERROR() << "DBus connection failed.";
 		exit(EXIT_FAILURE);
