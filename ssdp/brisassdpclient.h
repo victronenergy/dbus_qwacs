@@ -31,8 +31,8 @@
 
 #include <QObject>
 #include <QUdpSocket>
-#include <QHttpRequestHeader>
 
+#include "httprequestheader.h"
 #include "brisaglobal.h"
 
 namespace BrisaUpnp {
@@ -125,7 +125,7 @@ private slots:
      *
      *  \param datagram datagram
      */
-    void notifyReceived(QHttpRequestHeader *datagram);
+    void notifyReceived(HttpRequestHeader *datagram);
 
 private:
     bool running;

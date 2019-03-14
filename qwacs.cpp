@@ -160,7 +160,7 @@ void Qwacs::connectGaterway(const QString &gatewayAddress)
 {
 	QLOG_INFO() << "[Qwacs] Connect gateway" << gatewayAddress;
 	QUrl url(gatewayAddress);
-	mGateway.setHostname(url.encodedHost());
+	mGateway.setHostname(QUrl::toAce(url.host()));
 	QLOG_INFO() << "[Qwacs] New SSDP device found: " << mGateway.getHostname();
 	mGateway.setConnected(true);
 	mManager.setGatewayConnected(true);

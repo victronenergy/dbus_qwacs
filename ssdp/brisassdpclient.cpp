@@ -102,7 +102,7 @@ void BrisaSSDPClient::datagramReceived() {
         udpListener->readDatagram(Datagram->data(), Datagram->size());
 
         QString Temp(Datagram->data());
-        QHttpRequestHeader *Parser = new QHttpRequestHeader(Temp);
+        HttpRequestHeader *Parser = new HttpRequestHeader(Temp);
 
         notifyReceived(Parser);
 
@@ -112,7 +112,7 @@ void BrisaSSDPClient::datagramReceived() {
 
 }
 
-void BrisaSSDPClient::notifyReceived(QHttpRequestHeader *datagram) {
+void BrisaSSDPClient::notifyReceived(HttpRequestHeader *datagram) {
     if (!datagram->hasKey("nts"))
         return;
 
