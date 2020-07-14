@@ -149,7 +149,7 @@ void Qwacs::ssdpNewDevice(const QString &usn, const QString &location,
 	Q_UNUSED(server);
 	Q_UNUSED(cacheControl);
 	if (!mGateway.getConnected()) {
-		QLOG_INFO() << "SSDP Device: " << usn << ", " << location << ", " << st << ", " << ext << ", " << server;
+		// QLOG_INFO() << "SSDP Device: " << usn << ", " << location << ", " << st << ", " << ext << ", " << server;
 		if (usn.contains("urn:schemas-quby-nl:service:DectGateway:1")) {
 			connectGaterway(location);
 		}
